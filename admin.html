@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HeartScript Admin</title>
+    <style>
+        body{font-family:sans-serif; padding:40px; background:#f4f4f4;}
+        h1{color:#ff416c;}
+        table{width:100%; border-collapse:collapse; background:white; margin-top:20px;}
+        th, td{border:1px solid #ddd; padding:12px; text-align:left;}
+        th{background:#ff416c; color:white;}
+    </style>
+</head>
+<body>
+    <h1>Admin Panel - Customer Orders 📦</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Total</th>
+                <th>Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.Name }}</td>
+                <td>{{ order.Phone }}</td>
+                <td>{{ order.Address }}</td>
+                <td>₹{{ order.Total }}</td>
+                <td>{{ order.Items }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="/" style="text-decoration:none; color:#ff416c;">← Back to Website</a>
+</body>
+</html>
