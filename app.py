@@ -3,16 +3,19 @@ from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-app = Flask(__name__)
+# Render ke liye path define karna
+base_dir = os.path.dirname(os.path.abspath(__file__))
+template_dir = os.path.join(base_dir, 'templates')
 
-# Render Database Path
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app = Flask(__name__, template_folder=template_dir)
+
+# Database setup
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Database Model (Wahi jo aapka tha)
+# Database Model
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -24,7 +27,10 @@ class Order(db.Model):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        return f"Error: Template not found. Make sure index.html is inside 'templates' folder. Full error: {str(e)}"
 
 @app.route('/submit_order', methods=['POST'])
 def submit_order():
@@ -48,19 +54,8 @@ def admin():
     all_orders = Order.query.order_by(Order.date_ordered.desc()).all()
     return render_template('admin.html', orders=all_orders)
 
-@app.route('/delete_order/<int:id>')
-def delete_order(id):
-    try:
-        order_to_delete = Order.query.get_or_404(id)
-        db.session.delete(order_to_delete)
-        db.session.commit()
-        return """<script>alert('Order Deleted Successfully'); window.location.href='/admin';</script>"""
-    except Exception as e:
-        return f"Error deleting order: {e}"
-
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    # Render requirements
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
