@@ -1,18 +1,28 @@
 import os
 from flask import Flask, render_template, request, jsonify
-from pymongo import MongoClient
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 from datetime import datetime
-import certifi
-from flask_cors import CORS # Dusre phone se connection allow karne ke liye
 
 app = Flask(__name__)
-CORS(app) # Sabhi origins se request allow karega
+CORS(app) # Phone se connection allow karne ke liye
 
-# MongoDB Connection (Render ke MONGO_URI variable se link uthayega)
-MONGO_URI = os.environ.get('MONGO_URI')
-client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
-db = client['heartscript_db'] # Aapka database naam
-orders_collection = db['orders'] # Aapka collection (table) naam
+# SQLite Database Setup
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+# Database Model
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    address = db.Column(db.Text, nullable=False)
+    total = db.Column(db.String(20), nullable=False)
+    items = db.Column(db.Text, nullable=False)
+    date_ordered = db.Column(db.DateTime, default=datetime.utcnow)
 
 @app.route('/')
 def home():
@@ -22,38 +32,37 @@ def home():
 def submit_order():
     try:
         data = request.json
-        new_order = {
-            "name": data['name'],
-            "phone": data['phone'],
-            "address": data['address'],
-            "total": data['total'],
-            "items": data['items'],
-            "date_ordered": datetime.utcnow()
-        }
-        
-        # MongoDB mein data insert karna
-        result = orders_collection.insert_one(new_order)
-        
-        return jsonify({"status": "success", "id": str(result.inserted_id)})
+        new_order = Order(
+            name=data['name'],
+            phone=data['phone'],
+            address=data['address'],
+            total=data['total'],
+            items=str(data['items'])
+        )
+        db.session.add(new_order)
+        db.session.commit()
+        return jsonify({"status": "success", "id": new_order.id})
     except Exception as e:
-        print(f"Error: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/admin')
 def admin():
-    # Saare orders fetch karna (Latest pehle)
-    all_orders = list(orders_collection.find().sort("date_ordered", -1))
+    # Latest orders sabse upar dikhenge
+    all_orders = Order.query.order_by(Order.date_ordered.desc()).all()
     return render_template('admin.html', orders=all_orders)
 
-@app.route('/delete_order/<id>')
+@app.route('/delete_order/<int:id>')
 def delete_order(id):
-    from bson.objectid import ObjectId
     try:
-        orders_collection.delete_one({"_id": ObjectId(id)})
-        return """<script>alert('Order Deleted Successfully'); window.location.href='/admin';</script>"""
+        order_to_delete = Order.query.get_or_404(id)
+        db.session.delete(order_to_delete)
+        db.session.commit()
+        return """<script>alert('Order Deleted'); window.location.href='/admin';</script>"""
     except Exception as e:
-        return f"Error deleting order: {e}"
+        return f"Error: {e}"
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all() # Ye 'database.db' file apne aap bana dega
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
