@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The HeartScript Collection | Handcrafted Emotions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root { 
+            --primary: #ff416c; 
+            --accent: #7b1113;
+            --gold: #c5a059;
+            --dark: #0f0f0f; 
+            --soft-rose: #fff0f3;
+            --deep-red: #4a0404;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            background: linear-gradient(135deg, #fffafa 0%, #ffeef2 100%); 
+            color: var(--dark); 
+            overflow-x: hidden; 
+        }
+
+        /* Romantic Overlay Decor */
+        .page-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://www.transparenttextures.com/patterns/handmade-paper.png');
+            pointer-events: none; opacity: 0.4; z-index: -1;
+        }
+
+        /* Navbar Customization */
+        nav { 
+            padding: 20px 8%; background: rgba(255, 255, 255, 0.95); display: flex; 
+            justify-content: space-between; align-items: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: sticky; 
+            top: 0; z-index: 1000; backdrop-filter: blur(15px); 
+        }
+        .logo { font-family: 'Great Vibes', cursive; color: var(--primary); text-decoration: none; font-size: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.05); }
+        .nav-links a { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Hero Promotion Section */
+        .shop-header { 
+            text-align: center; padding: 120px 20px 80px; 
+            background: radial-gradient(circle at center, #fff 0%, #ffeef2 100%);
+            position: relative; overflow: hidden;
+        }
+        .shop-header::after {
+            content: 'Handwritten Legacy'; font-family: 'Great Vibes'; font-size: 15vw;
+            color: rgba(255, 65, 108, 0.03); position: absolute; top: 20%; left: 0; width: 100%; z-index: 0;
+        }
+        .shop-header h1 { font-family: 'Playfair Display', serif; font-size: 4rem; margin: 0; position: relative; z-index: 1; color: var(--deep-red); }
+        .shop-header p { font-family: 'Playfair Display', serif; font-style: italic; color: var(--accent); font-size: 1.4rem; z-index: 1; position: relative; }
+
+        /* Category Section Styling */
+        .category-container { padding: 40px 8%; }
+        .category-title { 
+            font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 30px; 
+            border-bottom: 2px solid var(--primary); display: inline-block; padding-bottom: 10px;
+            color: var(--deep-red);
+        }
+
+        /* Promotion Banner */
+        .promo-banner {
+            background: var(--deep-red); color: white; padding: 40px; text-align: center;
+            border-radius: 40px; margin: 40px 8%; position: relative; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(74, 4, 4, 0.3);
+        }
+        .promo-banner h2 { font-family: 'Great Vibes', cursive; font-size: 3rem; margin: 0; color: var(--gold); }
+        .promo-banner p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 10px auto; }
+
+        /* Products Grid */
+        .products-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 40px; 
+        }
+        
+        .product-card { 
+            background: white; border-radius: 30px; overflow: hidden; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.04); transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
+            border: 1px solid #fff; position: relative;
+        }
+        .product-card:hover { transform: translateY(-20px) scale(1.02); box-shadow: 0 30px 60px rgba(255, 65, 108, 0.15); }
+        
+        .img-container { overflow: hidden; height: 380px; position: relative; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; transition: 1s ease; }
+        .product-card:hover .product-img { transform: scale(1.15); }
+        
+        /* Amazon Style Exclusive Label */
+        .exclusive-label {
+            position: absolute; top: 20px; right: 20px; background: rgba(15,15,15,0.8);
+            color: var(--gold); padding: 5px 15px; border-radius: 30px; font-size: 0.7rem;
+            font-weight: bold; letter-spacing: 1px; backdrop-filter: blur(5px);
+        }
+
+        .product-info { padding: 35px; text-align: center; background: white; }
+        .product-info h3 { margin: 0 0 10px 0; font-size: 1.6rem; font-family: 'Playfair Display', serif; color: var(--deep-red); }
+        
+        .rating { color: var(--gold); font-size: 0.8rem; margin-bottom: 15px; letter-spacing: 2px; }
+        
+        .price-box { margin-bottom: 25px; }
+        .price { color: var(--dark); font-weight: 700; font-size: 2rem; }
+        .shipping-tag { color: #2d6a4f; font-size: 0.8rem; font-weight: 600; display: block; margin-top: 5px; }
+
+        .btn-order { 
+            background: var(--dark); color: white; border: none; 
+            padding: 18px 30px; border-radius: 50px; cursor: pointer; font-weight: 600; 
+            width: 100%; transition: 0.4s; text-transform: uppercase; letter-spacing: 2px;
+            font-size: 0.8rem;
+        }
+        .btn-order:hover { background: var(--primary); box-shadow: 0 10px 25px rgba(255, 65, 108, 0.4); }
+
+        /* Modal Customization */
+        #modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 15, 15, 0.9); z-index: 2000; justify-content: center; 
+            align-items: center; backdrop-filter: blur(10px);
+        }
+        .modal-content { 
+            background: white; padding: 40px; border-radius: 40px; width: 90%; max-width: 550px; 
+            position: relative; border: 1px solid var(--soft-rose); max-height: 90vh; overflow-y: auto;
+        }
+        .modal-content h2 { font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--primary); margin: 0; text-align: center; }
+
+        input, textarea { 
+            width: 100%; padding: 15px; margin: 8px 0; border: 1px solid #eee; 
+            border-radius: 12px; font-family: inherit; box-sizing: border-box; outline: none; 
+            background: #fdfdfd; font-size: 0.9rem;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 10px rgba(255, 65, 108, 0.1); }
+        
+        .btn-submit { 
+            background: var(--primary); color: white; border: none; padding: 18px; 
+            width: 100%; border-radius: 50px; font-weight: bold; cursor: pointer; 
+            margin-top: 15px; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        footer { text-align: center; padding: 100px 20px; background: var(--dark); color: white; }
+        .footer-logo { font-family: 'Great Vibes', cursive; font-size: 4rem; color: var(--primary); margin-bottom: 20px; }
+        .footer-desc { max-width: 600px; margin: 0 auto 30px; opacity: 0.7; font-size: 0.9rem; line-height: 1.8; }
+
+        /* Form Row Helper */
+        .form-row { display: flex; gap: 10px; }
+        .form-row input { flex: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="page-overlay"></div>
+
+    <nav>
+        <a href="/" class="logo">HeartScript</a>
+        <div class="nav-links">
+            <a href="/"><i class="fas fa-arrow-left"></i> Gallery</a>
+        </div>
+    </nav>
+
+    <div class="shop-header">
+        <h1>The Art of HeartScript</h1>
+        <p>Premium Calligraphy. Deep Emotions. Timeless Ink.</p>
+    </div>
+
+    <div class="promo-banner">
+        <h2>Handwritten for the Soul</h2>
+        <p>At HeartScript, we don't just write; we weave your emotions into every stroke. Perfect for luxury gifts, romantic letters, and timeless certificates.</p>
+    </div>
+
+    <div class="category-container">
+        <h2 class="category-title">Signature Masterpieces</h2>
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <div class="exclusive-label">HeartScript Exclusive</div>
+                <div class="img-container">
+                    <img src="{{ product.image_url }}" class="product-img" alt="{{ product.name }}">
+                </div>
+                <div class="product-info">
+                    <div class="rating">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <h3>{{ product.name }}</h3>
+                    <div class="price-box">
+                        <span class="price">₹{{ product.price }}</span>
+                        <span class="shipping-tag"><i class="fas fa-shipping-fast"></i> Complimentary Shipping</span>
+                    </div>
+                    <button class="btn-order" onclick="openCheckout('{{ product.name }}', '{{ product.price }}')">
+                        Own This Masterpiece
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div style="background: var(--soft-rose); padding: 80px 8%; text-align: center; margin: 60px 0;">
+        <h2 style="font-family: 'Playfair Display'; color: var(--deep-red); font-size: 2.5rem;">Why HeartScript?</h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-top: 40px;">
+            <div style="flex: 1; min-width: 250px;">
+                <i class="fas fa-feather-alt" style="font-size: 2rem; color: var(--primary);"></i>
+                <h3>Authentic Ink</h3>
+                <p>We use premium organic inks that last for generations.</p>
+            </div>
+            <div style="flex: 1; min-width: 250px;">
+                <i class="fas fa-heart" style="font-size: 2rem; color: var(--primary);"></i>
+                <h3>Soulful Design</h3>
+                <p>Each design is unique, customized specifically for your story.</p>
+            </div>
+            <div style="flex: 1; min-width: 250px;">
+                <i class="fas fa-medal" style="font-size: 2rem; color: var(--primary);"></i>
+                <h3>Premium Finish</h3>
+                <p>Delivered in luxury packaging that screams elegance.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal-content">
+            <button onclick="closeCheckout()" style="position:absolute; top:20px; right:20px; border:none; background:none; font-size:1.5rem; cursor:pointer; color:#ccc;">&times;</button>
+            <h2>Secure Checkout</h2>
+            <p id="selected-item-display" style="text-align: center; color: var(--accent); font-weight: 600; margin-bottom: 20px;"></p>
+            
+            <div id="order-form">
+                <div class="form-row">
+                    <input type="text" id="cust-name" placeholder="Full Name" required>
+                    <input type="email" id="cust-email" placeholder="Email Address" required>
+                </div>
+                <input type="tel" id="cust-phone" placeholder="WhatsApp Number (for order preview)" required>
+
+                <div class="form-row">
+                    <input type="text" id="cust-house" placeholder="House/Flat No." required>
+                    <input type="text" id="cust-pincode" placeholder="6-Digit Pincode" required maxlength="6">
+                </div>
+                <textarea id="cust-address" placeholder="Area, Street, or Colony Details" rows="2" required></textarea>
+                <input type="text" id="cust-landmark" placeholder="Landmark (Optional e.g. Near Rose Garden)">
+
+                <h4 style="margin: 15px 0 5px; color: var(--deep-red); font-family: 'Playfair Display'; border-left: 3px solid var(--primary); padding-left: 10px;">Personalize Your Order</h4>
+                <textarea id="cust-details" placeholder="Tell us the story behind this order. Names to be written, message for your loved one, or specific dates..." rows="4" required style="border: 1px solid var(--primary);"></textarea>
+                
+                <button class="btn-submit" id="submit-btn" onclick="submitOrder()">
+                    Confirm Order & Get Invoice
+                </button>
+                <p style="text-align:center; font-size:0.7rem; color:#aaa; margin-top:15px;">
+                    <i class="fas fa-lock"></i> Your emotions are safe. Encrypted checkout by HeartScript.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">HeartScript</div>
+        <p class="footer-desc">Crafting handwritten legacies for those who believe that digital is temporary, but ink is forever. Our mission is to keep the soul of calligraphy alive in every home.</p>
+        <div style="font-size: 1.5rem; margin-bottom: 30px;">
+            <i class="fab fa-instagram" style="margin: 0 15px; cursor: pointer;"></i>
+            <i class="fab fa-facebook" style="margin: 0 15px; cursor: pointer;"></i>
+            <i class="fab fa-pinterest" style="margin: 0 15px; cursor: pointer;"></i>
+        </div>
+        <p style="opacity: 0.5;">&copy; 2025 HeartScript Artistry. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        let selectedProduct = { name: "", price: "" };
+
+        function openCheckout(name, price) {
+            selectedProduct = { name, price };
+            document.getElementById('selected-item-display').innerHTML = `Masterpiece: ${name} | Total: ₹${price}`;
+            document.getElementById('modal-overlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCheckout() {
+            document.getElementById('modal-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function submitOrder() {
+            const name = document.getElementById('cust-name').value.trim();
+            const email = document.getElementById('cust-email').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const house_no = document.getElementById('cust-house').value.trim();
+            const pincode = document.getElementById('cust-pincode').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+            const landmark = document.getElementById('cust-landmark').value.trim();
+            const custom_details = document.getElementById('cust-details').value.trim();
+
+            if(!name || !email || !phone || !house_no || !pincode || !address || !custom_details) {
+                alert("Please share all details so we can craft your HeartScript masterpiece perfectly.");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-heart fa-beat"></i> Weaving your emotions...';
+            submitBtn.disabled = true;
+
+            const orderData = {
+                name: name,
+                email: email,
+                phone: phone,
+                house_no: house_no,
+                pincode: pincode,
+                address: address,
+                landmark: landmark,
+                custom_details: custom_details,
+                total: String(selectedProduct.price),
+                items: selectedProduct.name
+            };
+
+            fetch('/submit_order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+            .then(async res => {
+                const data = await res.json();
+                if(res.ok && data.status === 'success') {
+                    window.location.href = '/thank-you/' + data.order_id;
+                } else {
+                    throw new Error(data.message || "Error connecting to store");
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Order Failed: " + err.message);
+                submitBtn.innerHTML = 'Confirm Order & Get Invoice';
+                submitBtn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
