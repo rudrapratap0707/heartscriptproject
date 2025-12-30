@@ -10,66 +10,86 @@ CORS(app)
 
 # --- Database Configuration ---
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'database.db'))
 
+if app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
+    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # --- Database Models ---
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    products = db.relationship('Product', backref='category_ref', lazy=True)
+
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Integer, nullable=False)
     image_url = db.Column(db.String(500), default="https://via.placeholder.com/300")
+    description = db.Column(db.Text, nullable=True) 
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    
-    # --- UPDATED: Detailed Address Fields ---
     house_no = db.Column(db.String(100), nullable=False) 
-    address = db.Column(db.Text, nullable=False)        # Area/Colony
+    address = db.Column(db.Text, nullable=False)
     landmark = db.Column(db.String(100), nullable=True)  
     pincode = db.Column(db.String(10), nullable=False)
-    
-    # --- UPDATED: Personalization Field ---
-    custom_details = db.Column(db.Text, nullable=False) # User story/Instructions
-    
+    custom_details = db.Column(db.Text, nullable=False) 
     total = db.Column(db.String(20), nullable=False)
     items = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), default="Pending") 
     date_ordered = db.Column(db.DateTime, default=datetime.utcnow)
 
 # --- User Routes ---
+
 @app.route('/')
 def home():
-    return render_template('index.html')
+    # Home page par top 4 masterpieces dikhane ke liye
+    featured_products = Product.query.limit(4).all()
+    return render_template('index.html', featured=featured_products)
 
 @app.route('/shop')
 def shop():
-    products = Product.query.all()
-    return render_template('shop.html', products=products)
+    categories = Category.query.all()
+    selected_cat_id = request.args.get('category') # URL se category ID uthayega
+    
+    if selected_cat_id and selected_cat_id != 'None':
+        # FIX: Category filter logic
+        products = Product.query.filter_by(category_id=selected_cat_id).all()
+    else:
+        products = Product.query.all()
+        
+    return render_template('shop.html', products=products, categories=categories, selected_cat=selected_cat_id)
+
+# NEW & IMPROVED: Detailed Product View with Promotion
+@app.route('/product/<int:product_id>')
+def product_view(product_id):
+    product = Product.query.get_or_404(product_id)
+    # Promotion: Same category ke aur products dikhao (excluding current)
+    related = Product.query.filter(Product.category_id == product.category_id, Product.id != product_id).limit(3).all()
+    return render_template('product_view.html', product=product, related=related)
 
 @app.route('/submit_order', methods=['POST'])
 def submit_order():
     try:
         data = request.json
-        
-        # Check: Naye fields ko validate kar rahe hain
-        required_fields = ("name", "phone", "email", "house_no", "address", "pincode", "custom_details", "total", "items")
-        if not all(k in data for k in required_fields):
-            return jsonify({"status": "error", "message": "Missing required details for HeartScript experience"}), 400
-
         new_order = Order(
             name=data['name'],
             phone=data['phone'],
             email=data['email'],
             house_no=data['house_no'],
             address=data['address'],
-            landmark=data.get('landmark', ''), # Optional
+            landmark=data.get('landmark', ''),
             pincode=data['pincode'],
-            custom_details=data['custom_details'], # Personalization details
+            custom_details=data['custom_details'],
             total=data['total'],
             items=str(data['items'])
         )
@@ -78,8 +98,7 @@ def submit_order():
         return jsonify({"status": "success", "order_id": new_order.id})
     except Exception as e:
         db.session.rollback()
-        print(f"CRITICAL ERROR: {e}")
-        return jsonify({"status": "error", "message": f"Database Error: {str(e)}"}), 500
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/thank-you/<int:order_id>')
 def thank_you(order_id):
@@ -87,16 +106,15 @@ def thank_you(order_id):
     return render_template('thank_you.html', order=order)
 
 # --- Admin Section ---
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         password = request.form.get('password')
         if password == 'HeartScript@Admin2025': 
             session['admin_logged_in'] = True
-            flash("Dashboard Accessed!", "success")
             return redirect(url_for('admin'))
-        else:
-            flash("Wrong Password!", "danger")
+        flash("Wrong Password!", "danger")
     return render_template('login.html')
 
 @app.route('/admin')
@@ -105,18 +123,33 @@ def admin():
         return redirect(url_for('login'))
     orders = Order.query.order_by(Order.date_ordered.desc()).all()
     products = Product.query.all()
-    return render_template('admin.html', orders=orders, products=products)
+    categories = Category.query.all()
+    return render_template('admin.html', orders=orders, products=products, categories=categories)
+
+@app.route('/add_category', methods=['POST'])
+def add_category():
+    if not session.get('admin_logged_in'): return redirect(url_for('login'))
+    cat_name = request.form.get('name')
+    if cat_name:
+        new_cat = Category(name=cat_name)
+        db.session.add(new_cat)
+        db.session.commit()
+        flash("New Collection Category Added!", "success")
+    return redirect(url_for('admin'))
 
 @app.route('/add_product', methods=['POST'])
 def add_product():
     if not session.get('admin_logged_in'): return redirect(url_for('login'))
-    name = request.form.get('name')
-    price = request.form.get('price')
-    image_url = request.form.get('image_url')
-    new_product = Product(name=name, price=price, image_url=image_url)
+    new_product = Product(
+        name=request.form.get('name'),
+        price=request.form.get('price'),
+        image_url=request.form.get('image_url'),
+        description=request.form.get('description'), 
+        category_id=request.form.get('category_id')
+    )
     db.session.add(new_product)
     db.session.commit()
-    flash("Product added successfully!", "success")
+    flash(f"'{new_product.name}' added to your gallery!", "success")
     return redirect(url_for('admin'))
 
 @app.route('/delete_product/<int:id>')
@@ -125,18 +158,16 @@ def delete_product(id):
     product = Product.query.get_or_404(id)
     db.session.delete(product)
     db.session.commit()
-    flash("Product deleted!", "info")
+    flash("Product removed.", "info")
     return redirect(url_for('admin'))
 
-# --- NEW FEATURE: Delete Order ---
 @app.route('/delete_order/<int:id>')
 def delete_order(id):
-    if not session.get('admin_logged_in'): 
-        return redirect(url_for('login'))
+    if not session.get('admin_logged_in'): return redirect(url_for('login'))
     order = Order.query.get_or_404(id)
     db.session.delete(order)
     db.session.commit()
-    flash(f"Order #{id} has been permanently removed.", "info")
+    flash("Order record deleted.", "info")
     return redirect(url_for('admin'))
 
 @app.route('/logout')
