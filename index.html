@@ -22,7 +22,7 @@
         
         button{border:none; border-radius:10px; cursor:pointer; font-weight:bold; padding:12px 25px; transition: 0.3s; margin-top:10px;}
         .btn-primary{background:#ff416c; color:#fff;}
-        .cart-status{position:fixed; bottom:20px; right:20px; background:#333; color:white; padding:15px; border-radius:50px; cursor:pointer;}
+        .cart-status{position:fixed; bottom:20px; right:20px; background:#333; color:white; padding:15px; border-radius:50px; cursor:pointer; z-index: 999;}
         .order-box{max-width:500px; margin:auto; background:#fff; padding:30px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1);}
         input, textarea{width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;}
     </style>
@@ -30,7 +30,7 @@
 <body>
 
 <header>
-    <h1 onclick="showPage('landing')">HeartScript ❤️</h1>
+    <h1 onclick="showPage('landing')" style="cursor:pointer">HeartScript ❤️</h1>
     <div class="nav-links">
         <a onclick="showPage('landing')">HOME</a>
         <a onclick="showPage('shop')">GIFT SHOP</a>
@@ -142,7 +142,10 @@
             items: cart
         };
 
-        fetch('/submit_order', {
+        // Render URL for connection
+        const API_URL = 'https://heartscriptproject.onrender.com/submit_order';
+
+        fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
@@ -150,19 +153,24 @@
         .then(res => res.json())
         .then(data => {
             if(data.status === 'success') {
-                // 1. Download PDF
+                // 1. Download PDF using jsPDF
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
+                doc.setFontSize(20);
                 doc.text("HeartScript Invoice", 20, 20);
+                doc.setFontSize(12);
                 doc.text("Customer: " + name, 20, 40);
-                doc.text("Total Amount: Rs." + total, 20, 50);
+                doc.text("Phone: " + phone, 20, 50);
+                doc.text("Address: " + address, 20, 60);
+                doc.text("Total Amount: Rs." + total, 20, 80);
+                doc.text("Thank you for ordering with HeartScript!", 20, 100);
                 doc.save("HeartScript_Bill.pdf");
 
                 // 2. WhatsApp Redirect
                 let itemsList = cart.map(i => i.name).join(", ");
                 let waMessage = `*Naya Order!*%0A*Naam:* ${name}%0A*Phone:* ${phone}%0A*Items:* ${itemsList}%0A*Total:* ₹${total}`;
                 
-                // Yahan apna 10 digit number daalein (91 ke saath)
+                // APNA 10-DIGIT NUMBER YAHA LIKHEIN (91 ke saath)
                 let myNumber = "91XXXXXXXXXX"; 
                 
                 alert("Order Saved & Bill Downloaded! Redirecting to WhatsApp...");
@@ -170,12 +178,16 @@
                 cart = [];
                 document.getElementById('cartCount').innerText = "0";
                 
+                // Final Redirect to WhatsApp
                 window.location.href = `https://wa.me/${myNumber}?text=${waMessage}`;
             } else {
-                alert("Server error, please try again.");
+                alert("Server error: " + data.message);
             }
         })
-        .catch(err => alert("Error: " + err));
+        .catch(err => {
+            console.error(err);
+            alert("Connection Error! Backend might be sleeping. Please try again in 1 minute.");
+        });
     }
 
     renderShop();
