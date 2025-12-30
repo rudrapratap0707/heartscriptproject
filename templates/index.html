@@ -5,81 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HeartScript | The Art of Handwritten Emotions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Great+Vibes&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #ff416c;
             --dark: #1a1a1a;
+            --accent: #7b1113;
+            --gold: #c5a059;
             --glass: rgba(255, 255, 255, 0.9);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Poppins', sans-serif; background: #fff; color: var(--dark); line-height: 1.6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background: #fff; color: var(--dark); line-height: 1.8; overflow-x: hidden; }
 
-        /* Navbar Customization */
+        /* Navbar */
         nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px 8%; background: white; position: sticky; top: 0; z-index: 1000;
             box-shadow: 0 2px 15px rgba(0,0,0,0.05);
         }
-        .logo { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--primary); text-decoration: none; font-weight: bold; }
-        .nav-links a { text-decoration: none; color: var(--dark); margin-left: 25px; font-weight: 500; transition: 0.3s; }
+        .logo { font-family: 'Great Vibes', cursive; font-size: 35px; color: var(--primary); text-decoration: none; font-weight: bold; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--dark); margin-left: 25px; font-weight: 500; transition: 0.3s; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
         .nav-links a:hover { color: var(--primary); }
+        .insta-nav-icon { color: var(--primary) !important; font-size: 1.2rem !important; }
 
-        /* Hero Section - Promotion Focused */
+        /* Hero Section */
         .hero {
-            height: 85vh;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('https://images.unsplash.com/photo-1516410529446-2c777cb7366d?auto=format&fit=crop&w=1500');
+            height: 90vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?q=80&w=2000&auto=format&fit=crop');
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             color: white; text-align: center; padding: 0 20px;
         }
-        .hero h1 { font-family: 'Playfair Display', serif; font-size: 4rem; margin-bottom: 20px; animation: fadeIn 1.5s; }
-        .hero p { font-size: 1.2rem; max-width: 600px; margin-bottom: 30px; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 5rem; margin-bottom: 20px; animation: fadeInDown 1.5s; line-height: 1.2; }
+        .hero p { font-size: 1.4rem; max-width: 800px; margin-bottom: 40px; font-weight: 300; font-style: italic; opacity: 0.9; }
+        
         .btn-cta { 
-            background: var(--primary); color: white; padding: 18px 45px; 
+            background: var(--primary); color: white; padding: 20px 55px; 
             border-radius: 50px; text-decoration: none; font-weight: 600; 
-            font-size: 1.1rem; transition: 0.4s; box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4);
+            font-size: 1.2rem; transition: 0.4s; box-shadow: 0 10px 30px rgba(255, 65, 108, 0.4);
+            text-transform: uppercase; letter-spacing: 2px;
         }
-        .btn-cta:hover { transform: scale(1.05); background: #ff4b2b; }
+        .btn-cta:hover { transform: scale(1.08); background: #ff4b2b; }
 
-        /* Professional About Section (500 Words Optimized) */
-        .about-section { padding: 100px 10%; background: #fdfdfd; }
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
-        .about-content { text-align: justify; }
-        .about-content h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); }
-        .about-content p { margin-bottom: 15px; color: #555; font-size: 1.05rem; }
-
-        /* Team Section with Images */
-        .team-section { padding: 80px 10%; text-align: center; }
-        .team-grid { display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; margin-top: 50px; }
-        .team-card { width: 280px; transition: 0.3s; }
-        .team-img-wrapper { 
-            width: 200px; height: 200px; margin: 0 auto 20px; 
-            border-radius: 50%; overflow: hidden; border: 5px solid var(--primary);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        /* Trust Badge Section */
+        .trust-bar {
+            background: #fff0f3;
+            padding: 40px 10%;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            text-align: center;
         }
+        .trust-item { padding: 20px; }
+        .trust-item i { font-size: 2rem; color: var(--primary); margin-bottom: 15px; }
+        .trust-item h4 { font-size: 0.9rem; letter-spacing: 1px; color: var(--dark); }
+
+        /* About Section */
+        .about-section { padding: 120px 10%; background: #fffcfc; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .about-content h2 { font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 30px; color: var(--accent); }
+        .highlight-text { border-left: 4px solid var(--primary); padding-left: 20px; font-style: italic; margin: 30px 0; }
+        .about-image img { width: 100%; border-radius: 15px; box-shadow: 20px 20px 0px var(--primary); }
+
+        /* Team Section */
+        .team-section { padding: 100px 10%; text-align: center; }
+        .team-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 50px; }
+        .team-card { width: 300px; padding: 40px 20px; background: #fff; border-radius: 20px; transition: 0.5s; border: 1px solid #f0f0f0; }
+        .team-card:hover { transform: translateY(-15px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .team-img-wrapper { width: 150px; height: 150px; margin: 0 auto 30px; border-radius: 50%; overflow: hidden; outline: 3px solid var(--primary); outline-offset: 5px; }
         .team-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-        .team-card h3 { margin-bottom: 5px; font-family: 'Playfair Display', serif; }
-        .team-card p { color: var(--primary); font-weight: 600; font-size: 0.9rem; }
 
-        /* Contact Founder / Footer Promotion */
+        /* Footer */
         footer { background: var(--dark); color: white; padding: 80px 10% 40px; }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 50px; }
-        .founder-box { 
-            background: rgba(255,255,255,0.05); padding: 30px; border-radius: 15px;
-            border-left: 4px solid var(--primary);
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1.5fr; gap: 60px; }
+        .founder-box { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 15px; border-left: 4px solid var(--primary); }
+        .footer-logo { font-family: 'Great Vibes', cursive; font-size: 40px; color: var(--primary); margin-bottom: 20px; display: block; }
+        
+        .insta-btn-footer {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: white !important;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: 0.3s;
         }
-        .founder-box h3 { margin-bottom: 15px; }
-        .founder-box a { color: var(--primary); text-decoration: none; font-weight: bold; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        @media (max-width: 768px) {
+        .insta-btn-footer:hover { opacity: 0.9; transform: scale(1.05); }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 992px) {
             .about-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 2.5rem; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 3rem; }
         }
     </style>
 </head>
@@ -88,54 +116,76 @@
     <nav>
         <a href="/" class="logo">HeartScript</a>
         <div class="nav-links">
-            <a href="/shop">Collection</a>
+            <a href="/shop">The Collection</a>
             <a href="#about">Our Story</a>
-            <a href="#team">The Team</a>
+            <a href="#team">The Artisans</a>
+            <a href="https://www.instagram.com/heartscript025?igsh=MWp5cTZjejRlZWdzag==" target="_blank" class="insta-nav-icon">
+                <i class="fab fa-instagram"></i>
+            </a>
             <a href="/login"><i class="fas fa-lock"></i> Admin</a>
         </div>
     </nav>
 
     <div class="hero">
-        <h1>Legacy in Ink.</h1>
-        <p>We preserve the intimacy of handwritten words in a digital age. Premium calligraphy, bespoke letters, and gifts that carry a heartbeat.</p>
-        <a href="/shop" class="btn-cta">Explore Shop</a>
+        <h1>Handwritten<br>Legacies.</h1>
+        <p>Because some emotions are too deep for a digital font. We bring back the soul of traditional calligraphy to your most cherished messages.</p>
+        <a href="/shop" class="btn-cta">Explore the Collection</a>
+    </div>
+
+    <div class="trust-bar">
+        <div class="trust-item">
+            <i class="fas fa-undo-alt"></i>
+            <h4>7-DAY REPLACEMENT</h4>
+        </div>
+        <div class="trust-item">
+            <i class="fas fa-truck"></i>
+            <h4>FREE COD AVAILABLE</h4>
+        </div>
+        <div class="trust-item">
+            <i class="fas fa-headset"></i>
+            <h4>24/7 CUSTOMER SUPPORT</h4>
+        </div>
+        <div class="trust-item">
+            <i class="fas fa-feather-alt"></i>
+            <h4>100% HANDCRAFTED</h4>
+        </div>
     </div>
 
     <section class="about-section" id="about">
         <div class="about-grid">
             <div class="about-content">
-                <h2>The Art of Expression</h2>
-                <p>
-                    In an era where messages are sent in seconds and forgotten in minutes, HeartScript stands as a sanctuary for the words that deserve to last a lifetime. Our journey began with a simple fountain pen and a profound realization: the human touch is irreplaceable. 
-                </p>
-                <p>
-                    HeartScript is not just a brand; it is a movement dedicated to the revival of traditional calligraphy and handwritten intimacy. We believe that every stroke of a nib carries an emotion that a keyboard simply cannot replicate. Our artisans spend hours perfecting the curves and slants of every letter, ensuring that your message—be it a love letter, an invitation, or a poetic gift—is transformed into a timeless masterpiece.
-                </p>
-                <p>
-                    We promote the idea that true luxury lies in patience and personalization. When you choose HeartScript, you are not just buying a product; you are commissioning a piece of art. From the choice of premium cotton paper to the selection of archival-grade inks, we ensure that your legacy is preserved for generations.
-                </p>
+                <h2>The Art of Eternal Expression</h2>
+                <p>In an era where messages are sent in seconds and forgotten in minutes, HeartScript stands as a sanctuary for the words that deserve to last a lifetime.</p>
+                <div class="highlight-text">
+                    "We don't just write letters; we weave heartbeat and soul into every curve of the nib."
+                </div>
+                <p>From premium cotton paper to archival-grade inks, we ensure that your legacy is preserved for generations. When you choose HeartScript, you are commissioning a piece of history.</p>
             </div>
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1515377611322-a99b62bc3d6d?auto=format&fit=crop&w=800" alt="Calligraphy Art" style="width: 100%; border-radius: 20px; box-shadow: 20px 20px 0 var(--primary);">
+                <img src="https://i.ibb.co/LT9tWyH/final.jpg" alt="Calligraphy Art">
             </div>
         </div>
     </section>
 
-    <section class="team-section" id="team" style="background: #fff;">
-        <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">Meet the Artisans</h2>
-        <p style="color: #666;">The creative souls behind every HeartScript creation.</p>
+    <section class="team-section" id="team">
+        <h2 style="font-family: 'Playfair Display'; font-size: 3rem;">Meet the Artisans</h2>
+        <p style="color: var(--primary); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 50px;">The Visionaries of HeartScript</p>
+        
         <div class="team-grid">
             <div class="team-card">
-                <div class="team-img-wrapper">
-                    <img src="https://via.placeholder.com/200" alt="Founder"> </div>
-                <h3>[Founder Name]</h3>
-                <p>Founder & Lead Calligrapher</p>
+                <div class="team-img-wrapper"><img src="https://i.ibb.co/dsKVTHbq/image.jpg" alt="Rudra"></div>
+                <h3>Rudra Pratap Tripathi</h3>
+                <p style="color: var(--primary); font-size: 0.8rem; font-weight: bold;">Founder & Master Calligrapher</p>
             </div>
             <div class="team-card">
-                <div class="team-img-wrapper">
-                    <img src="https://via.placeholder.com/200" alt="Creative Lead"> </div>
-                <h3>[Team Member]</h3>
-                <p>Creative Strategist</p>
+                <div class="team-img-wrapper"><img src="https://i.ibb.co/VpWZ0F8Q/image.jpg" alt="Priyanshu"></div>
+                <h3>Priyanshu Singh</h3>
+                <p style="color: var(--primary); font-size: 0.8rem; font-weight: bold;">Creative Strategist</p>
+            </div>
+            <div class="team-card">
+                <div class="team-img-wrapper"><img src="https://i.ibb.co/Wbv60YN/RAVI.jpg" alt="Ravi"></div>
+                <h3>Ravi Prajapati</h3>
+                <p style="color: var(--primary); font-size: 0.8rem; font-weight: bold;">Head of Operations</p>
             </div>
         </div>
     </section>
@@ -143,24 +193,28 @@
     <footer>
         <div class="footer-grid">
             <div>
-                <h2 class="logo" style="color: white; margin-bottom: 20px;">HeartScript</h2>
-                <p style="color: #bbb;">Crafting emotions, one letter at a time. Based in India, serving hearts worldwide.</p>
+                <span class="footer-logo">HeartScript</span>
+                <p style="color: #bbb; font-size: 0.9rem;">Boutique calligraphy studio based in India, serving souls who value the elegance of ink worldwide.</p>
             </div>
-            <div>
-                <h4>Quick Links</h4><br>
-                <a href="/shop" style="color: #bbb; text-decoration: none;">Shop Now</a><br>
-                <a href="#about" style="color: #bbb; text-decoration: none;">Our Story</a>
+            <div style="padding-left: 20px;">
+                <h4 style="color: var(--gold); margin-bottom: 20px;">Quick Links</h4>
+                <a href="/shop" style="display:block; color:#bbb; text-decoration:none; margin-bottom:10px;">The Shop</a>
+                <a href="#about" style="display:block; color:#bbb; text-decoration:none; margin-bottom:10px;">Our Story</a>
+                <a href="https://www.instagram.com/heartscript025?igsh=MWp5cTZjejRlZWdzag==" target="_blank" style="display:block; color:#bbb; text-decoration:none;">Instagram Feed</a>
             </div>
             <div class="founder-box">
-                <h3>Contact Founder</h3>
-                <p>For collaborations and direct inquiries:</p>
-                <p><i class="fas fa-envelope"></i> <a href="mailto:official@heartscript.com">official@heartscript.com</a></p>
-                <p><i class="fab fa-instagram"></i> @HeartScriptOfficial</p>
+                <h4 style="margin-bottom:15px;">Connect with us</h4>
+                <p style="font-size: 0.85rem;"><i class="fab fa-whatsapp" style="color: #25D366;"></i> +91 6394174932</p>
+                <p style="font-size: 0.85rem;"><i class="fas fa-envelope" style="color: var(--primary);"></i> official@heartscript.com</p>
+                
+                <a href="https://www.instagram.com/heartscript025?igsh=MWp5cTZjejRlZWdzag==" target="_blank" class="insta-btn-footer">
+                    <i class="fab fa-instagram"></i> Follow @heartscript025
+                </a>
             </div>
         </div>
-        <center style="border-top: 1px solid #333; padding-top: 30px; color: #666;">
-            &copy; 2025 HeartScript. All Rights Reserved.
-        </center>
+        <div style="text-align:center; margin-top:60px; padding-top:20px; border-top:1px solid #333; font-size:0.7rem; color:#666;">
+            &copy; 2025 HEARTSCRIPT ARTISTRY. ALL RIGHTS RESERVED.
+        </div>
     </footer>
 
 </body>
