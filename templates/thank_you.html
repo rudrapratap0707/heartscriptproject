@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed | HeartScript</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root { --primary: #ff416c; --secondary: #2ecc71; --dark: #1a1a1a; }
+        body { font-family: 'Poppins', sans-serif; background: #fdfdfd; margin: 0; padding: 40px 20px; color: #333; }
+        
+        .success-card { 
+            max-width: 600px; margin: auto; background: white; 
+            padding: 40px; border-radius: 25px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .icon { font-size: 70px; color: var(--secondary); margin-bottom: 20px; }
+        h1 { font-family: 'Playfair Display', serif; color: var(--dark); margin-bottom: 5px; }
+        .order-id { color: #999; font-size: 0.9rem; margin-bottom: 25px; display: block; }
+
+        /* Summary Box */
+        .summary-box { 
+            text-align: left; background: #fffafa; padding: 25px; 
+            border-radius: 15px; margin-bottom: 30px; 
+            border: 1px solid #ffeef1;
+        }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .label { font-weight: 600; color: #555; }
+        .value { color: #333; text-align: right; max-width: 60%; }
+
+        /* Buttons */
+        .btn-group { display: flex; flex-direction: column; gap: 15px; }
+        .btn { 
+            padding: 18px; border-radius: 12px; text-decoration: none; 
+            font-weight: 600; transition: 0.3s; display: flex; 
+            align-items: center; justify-content: center; gap: 12px; border: none; font-size: 1rem; cursor: pointer;
+        }
+        .btn-wa { background: #25D366; color: white; }
+        .btn-bill { background: var(--dark); color: white; }
+        .btn-home { background: #f0f0f0; color: #555; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+        #invoice-template { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="success-card">
+        <div class="icon"><i class="fas fa-check-circle"></i></div>
+        <h1>Thank You, {{ order.name }}!</h1>
+        <span class="order-id">Order ID: #HS-{{ order.id }}</span>
+        
+        <p>Aapka order mil gaya hai. Hum jald hi aapse sampark karenge.</p>
+        
+        <div class="summary-box">
+            <div class="summary-item">
+                <span class="label">Product:</span> <span class="value">{{ order.items }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Personalization:</span> <span class="value" style="font-style: italic;">"{{ order.custom_details[:50] }}..."</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Total Amount:</span> <span class="value" style="color:var(--primary); font-weight:bold;">₹{{ order.total }}</span>
+            </div>
+            <div class="summary-item">
+                <span class="label">Shipping To:</span> <span class="value">{{ order.house_no }}, {{ order.pincode }}</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a href="https://wa.me/916394174932?text=Hi HeartScript! I just placed an order (ID: #{{ order.id }}). Please confirm my calligraphy order for {{ order.items }}. %0A%0AStory: {{ order.custom_details[:100] }}" 
+               target="_blank" class="btn btn-wa">
+                <i class="fab fa-whatsapp"></i> Confirm on WhatsApp
+            </a>
+            
+            <button onclick="downloadPDF()" class="btn btn-bill">
+                <i class="fas fa-file-pdf"></i> Download Premium Invoice
+            </button>
+            
+            <a href="/" class="btn btn-home">Return to Home</a>
+        </div>
+    </div>
+
+    <div id="invoice-template">
+        <div style="padding: 50px; font-family: 'Poppins', sans-serif; background: white;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 3px solid #ff416c; padding-bottom: 20px;">
+                <div>
+                    <h1 style="color: #ff416c; margin: 0; font-family: 'Playfair Display', serif;">HeartScript</h1>
+                    <p style="font-size: 14px; color: #666;">Crafting Emotions, One Letter at a Time</p>
+                </div>
+                <div style="text-align: right;">
+                    <h2 style="margin: 0;">OFFICIAL INVOICE</h2>
+                    <p>Order ID: #HS-{{ order.id }}</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                <div>
+                    <h4 style="color: #ff416c; text-transform: uppercase;">Customer Details</h4>
+                    <p><strong>Name:</strong> {{ order.name }}<br>
+                    <strong>Email:</strong> {{ order.email }}<br>
+                    <strong>Phone:</strong> {{ order.phone }}</p>
+                </div>
+                <div>
+                    <h4 style="color: #ff416c; text-transform: uppercase;">Shipping Address</h4>
+                    <p>
+                        <strong>H.No:</strong> {{ order.house_no }}<br>
+                        {{ order.address }}<br>
+                        {% if order.landmark %}<strong>Landmark:</strong> {{ order.landmark }}<br>{% endif %}
+                        <strong>Pincode:</strong> {{ order.pincode }}
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 15px; background: #fff0f3; border-radius: 10px;">
+                <h4 style="color: #ff416c; margin: 0 0 5px 0; font-size: 14px;">PERSONALIZATION STORY</h4>
+                <p style="margin: 0; font-size: 13px; font-style: italic; color: #4a0404;">"{{ order.custom_details }}"</p>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; margin-top: 30px;">
+                <thead>
+                    <tr style="background: #f8f8f8; border-bottom: 2px solid #eee;">
+                        <th style="padding: 15px; text-align: left;">Service Description</th>
+                        <th style="padding: 15px; text-align: right;">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee;">{{ order.items }} - Custom Calligraphy Work</td>
+                        <td style="padding: 15px; border-bottom: 1px solid #eee; text-align: right;">₹{{ order.total }}</td>
+                    </tr>
+                    <tr style="font-size: 20px; font-weight: bold;">
+                        <td style="padding: 15px; text-align: right;">Grand Total:</td>
+                        <td style="padding: 15px; text-align: right; color: #ff416c;">₹{{ order.total }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 30px; padding: 25px; background: #fffcfc; border-radius: 10px; border: 1px solid #ffeef1;">
+                <h4 style="color: #ff416c; margin-bottom: 10px;">The HeartScript Promise</h4>
+                <p style="font-size: 11px; text-align: justify; color: #555; line-height: 1.6;">
+                    HeartScript is more than just a calligraphy service; it is a movement dedicated to preserving the profound intimacy of the human touch in a rapidly digitizing world. We believe that every stroke of a nib carries an emotion that a cold, digital font can never replicate... By choosing HeartScript, you are promoting the revival of traditional craftsmanship and artistic excellence.
+                </p>
+            </div>
+
+            <div style="margin-top: 40px; text-align: center; border-top: 1px solid #eee; padding-top: 20px; font-size: 13px; color: #888;">
+                <p>official@heartscript.com | www.heartscript.com</p>
+                <strong>Thank you for being part of the HeartScript Family!</strong>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            const element = document.getElementById('invoice-template');
+            element.style.display = 'block'; // Temporary show for capture
+            const options = {
+                margin: 0,
+                filename: 'HeartScript_Invoice_HS-{{ order.id }}.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            const btn = document.querySelector('.btn-bill');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+            
+            html2pdf().set(options).from(element).save().then(() => {
+                btn.innerHTML = '<i class="fas fa-file-pdf"></i> Download Premium Invoice';
+                element.style.display = 'none'; // Hide again
+            });
+        }
+    </script>
+</body>
+</html>
