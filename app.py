@@ -8,13 +8,14 @@ app = Flask(__name__)
 app.secret_key = "HeartScript_Secure_Vault_#2025" 
 CORS(app)
 
-# --- Database Configuration (Render & Local Fix) ---
+# --- Database Configuration (Render Fix) ---
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Agar Render par DATABASE_URL hai toh wo use hoga, nahi toh local database.db
-db_uri = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'database.db'))
+# Render par agar DATABASE_URL nahi milti toh wo automatically sahi SQLite path banayega
+sqlite_path = 'sqlite:///' + os.path.join(basedir, 'database.db')
+db_uri = os.environ.get('DATABASE_URL', sqlite_path)
 
-# Render PostgreSQL ke purane format ko fix karne ke liye
+# Render PostgreSQL (Neon) ke purane format 'postgres://' ko fix karne ke liye
 if db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 
@@ -22,7 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# --- Database Models (Existing models, no changes here) ---
+# --- Database Models ---
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -79,7 +80,6 @@ def product_view(product_id):
 def submit_order():
     try:
         data = request.json
-        # Convert items to string if it's a list from frontend
         items_str = str(data['items']) if isinstance(data['items'], (list, dict)) else data['items']
         
         new_order = Order(
@@ -141,16 +141,19 @@ def add_category():
 @app.route('/add_product', methods=['POST'])
 def add_product():
     if not session.get('admin_logged_in'): return redirect(url_for('login'))
-    new_product = Product(
-        name=request.form.get('name'),
-        price=request.form.get('price'),
-        image_url=request.form.get('image_url'),
-        description=request.form.get('description'), 
-        category_id=request.form.get('category_id')
-    )
-    db.session.add(new_product)
-    db.session.commit()
-    flash(f"'{new_product.name}' added to your gallery!", "success")
+    try:
+        new_product = Product(
+            name=request.form.get('name'),
+            price=int(request.form.get('price')),
+            image_url=request.form.get('image_url'),
+            description=request.form.get('description'), 
+            category_id=int(request.form.get('category_id'))
+        )
+        db.session.add(new_product)
+        db.session.commit()
+        flash(f"'{new_product.name}' added to your gallery!", "success")
+    except Exception as e:
+        flash(f"Error: {str(e)}", "danger")
     return redirect(url_for('admin'))
 
 @app.route('/delete_product/<int:id>')
@@ -176,13 +179,12 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
-# --- Initialization & Gunicorn Start ---
+# --- Startup Logic ---
 
-# Table creation Render par deployment ke waqt kaam aayega
 with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    # Local run ke liye debug=True, Render ke liye gunicorn use hoga
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    # Production mein debug=False hona chahiye
+    app.run(host='0.0.0.0', port=port, debug=False)
