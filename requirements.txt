@@ -1,5 +1,4 @@
 flask
-pymongo
-certifi
+flask-sqlalchemy
 flask-cors
 gunicorn
