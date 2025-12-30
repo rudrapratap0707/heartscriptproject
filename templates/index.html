@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartScript | Express Your Love</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family: 'Segoe UI', sans-serif;}
+        body{background:#fff0f6; color:#333;}
+        header{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;padding:20px;text-align:center;position:sticky;top:0;z-index:1000;}
+        .nav-links{margin-top:10px;}
+        .nav-links a{color: white; text-decoration: none; margin: 0 15px; font-weight: 600; cursor: pointer;}
+        .page{display:none;} .page.active{display:block;}
+        
+        .hero{height: 80vh; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center;}
+        
+        .container{width:90%; max-width:1100px; margin:auto; padding:40px 0;}
+        .products{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px;}
+        .card{background:#fff; border-radius:15px; box-shadow:0 10px 20px rgba(0,0,0,0.1); overflow:hidden; text-align:center; padding-bottom:15px;}
+        .card img{width:100%; height:200px; object-fit:cover;}
+        
+        button{border:none; border-radius:10px; cursor:pointer; font-weight:bold; padding:12px 25px; transition: 0.3s; margin-top:10px;}
+        .btn-primary{background:#ff416c; color:#fff;}
+        .cart-status{position:fixed; bottom:20px; right:20px; background:#333; color:white; padding:15px; border-radius:50px; cursor:pointer;}
+        .order-box{max-width:500px; margin:auto; background:#fff; padding:30px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1);}
+        input, textarea{width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;}
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 onclick="showPage('landing')">HeartScript ❤️</h1>
+    <div class="nav-links">
+        <a onclick="showPage('landing')">HOME</a>
+        <a onclick="showPage('shop')">GIFT SHOP</a>
+        <a href="/admin" target="_blank">ADMIN PANEL</a>
+    </div>
+</header>
+
+<div class="cart-status" onclick="showCart()">🛒 Cart (<span id="cartCount">0</span>)</div>
+
+<div id="landing" class="page active">
+    <section class="hero">
+        <h1>Handwritten Feelings, Delivered.</h1>
+        <p>Make your loved ones feel special with personalized gifts.</p>
+        <button class="btn-primary" onclick="showPage('shop')">Explore Shop 🎁</button>
+    </section>
+</div>
+
+<div id="shop" class="container page">
+    <h2 style="text-align:center; margin-bottom:30px;">Choose a Romantic Gift 💕</h2>
+    <div class="products" id="productList"></div>
+</div>
+
+<div id="cartPage" class="container page">
+    <div class="order-box">
+        <h3>Your Cart 🛒</h3>
+        <div id="cartItems"></div>
+        <hr>
+        <h4>Total: ₹<span id="cartTotal">0</span></h4>
+        <button class="btn-primary" style="width:100%" onclick="showPage('orderForm')">Proceed to Checkout</button>
+    </div>
+</div>
+
+<div id="orderForm" class="container page">
+    <div class="order-box">
+        <h3>Delivery Details 💌</h3>
+        <input id="userName" placeholder="Your Name">
+        <input id="userPhone" placeholder="Mobile Number">
+        <textarea id="userAddress" placeholder="Full Address"></textarea>
+        <button class="btn-primary" style="width:100%" onclick="placeOrder()">Confirm & Download Bill ❤️</button>
+    </div>
+</div>
+
+<div id="thanks" class="container page" style="text-align:center;">
+    <div class="order-box">
+        <h2>Order Successful! 🎉</h2>
+        <p>Your invoice has been downloaded. We will contact you soon.</p>
+        <button class="btn-primary" onclick="showPage('landing')">Go to Home</button>
+    </div>
+</div>
+
+<script>
+    const products = [
+        {name: "Handwritten Letter", price: 199, img: "https://images.unsplash.com/photo-1521220609214-a8552380c7a4?w=500"},
+        {name: "Romantic Gift Box", price: 599, img: "https://images.unsplash.com/photo-1549465220-1d8c9d9c6703?w=500"},
+        {name: "Memory Frame", price: 399, img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"}
+    ];
+    let cart = [];
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function renderShop() {
+        document.getElementById('productList').innerHTML = products.map(p => `
+            <div class="card">
+                <img src="${p.img}">
+                <h3>${p.name}</h3>
+                <p>₹${p.price}</p>
+                <button class="btn-primary" onclick="addToCart('${p.name}', ${p.price})">Add to Cart</button>
+            </div>
+        `).join('');
+    }
+
+    function addToCart(name, price) {
+        cart.push({name, price});
+        document.getElementById('cartCount').innerText = cart.length;
+        alert(name + " added!");
+    }
+
+    function showCart() {
+        let total = 0;
+        const list = document.getElementById('cartItems');
+        list.innerHTML = cart.length ? cart.map(i => {
+            total += i.price;
+            return `<p>${i.name} - ₹${i.price}</p>`;
+        }).join('') : "Cart is empty";
+        document.getElementById('cartTotal').innerText = total;
+        showPage('cartPage');
+    }
+
+    function placeOrder() {
+        const name = document.getElementById('userName').value;
+        const phone = document.getElementById('userPhone').value;
+        const address = document.getElementById('userAddress').value;
+        const total = document.getElementById('cartTotal').innerText;
+        
+        if(!name || !phone || !address) {
+            alert("Please fill all details!");
+            return;
+        }
+
+        const orderData = {
+            name: name,
+            phone: phone,
+            address: address,
+            total: total,
+            items: cart
+        };
+
+        fetch('/submit_order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === 'success') {
+                // 1. Download PDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.text("HeartScript Invoice", 20, 20);
+                doc.text("Customer: " + name, 20, 40);
+                doc.text("Total Amount: Rs." + total, 20, 50);
+                doc.save("HeartScript_Bill.pdf");
+
+                // 2. WhatsApp Redirect
+                let itemsList = cart.map(i => i.name).join(", ");
+                let waMessage = `*Naya Order!*%0A*Naam:* ${name}%0A*Phone:* ${phone}%0A*Items:* ${itemsList}%0A*Total:* ₹${total}`;
+                
+                // Yahan apna 10 digit number daalein (91 ke saath)
+                let myNumber = "91XXXXXXXXXX"; 
+                
+                alert("Order Saved & Bill Downloaded! Redirecting to WhatsApp...");
+                
+                cart = [];
+                document.getElementById('cartCount').innerText = "0";
+                
+                window.location.href = `https://wa.me/${myNumber}?text=${waMessage}`;
+            } else {
+                alert("Server error, please try again.");
+            }
+        })
+        .catch(err => alert("Error: " + err));
+    }
+
+    renderShop();
+</script>
+</body>
+</html>
