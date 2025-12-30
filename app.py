@@ -8,17 +8,21 @@ app = Flask(__name__)
 app.secret_key = "HeartScript_Secure_Vault_#2025" 
 CORS(app)
 
-# --- Database Configuration ---
+# --- Database Configuration (Render & Local Fix) ---
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'database.db'))
 
-if app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
-    app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
+# Agar Render par DATABASE_URL hai toh wo use hoga, nahi toh local database.db
+db_uri = os.environ.get('DATABASE_URL', 'sqlite:///' + os.path.join(basedir, 'database.db'))
 
+# Render PostgreSQL ke purane format ko fix karne ke liye
+if db_uri.startswith("postgres://"):
+    db_uri = db_uri.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# --- Database Models ---
+# --- Database Models (Existing models, no changes here) ---
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -52,28 +56,22 @@ class Order(db.Model):
 
 @app.route('/')
 def home():
-    # Home page par top 4 masterpieces dikhane ke liye
     featured_products = Product.query.limit(4).all()
     return render_template('index.html', featured=featured_products)
 
 @app.route('/shop')
 def shop():
     categories = Category.query.all()
-    selected_cat_id = request.args.get('category') # URL se category ID uthayega
-    
+    selected_cat_id = request.args.get('category')
     if selected_cat_id and selected_cat_id != 'None':
-        # FIX: Category filter logic
         products = Product.query.filter_by(category_id=selected_cat_id).all()
     else:
         products = Product.query.all()
-        
     return render_template('shop.html', products=products, categories=categories, selected_cat=selected_cat_id)
 
-# NEW & IMPROVED: Detailed Product View with Promotion
 @app.route('/product/<int:product_id>')
 def product_view(product_id):
     product = Product.query.get_or_404(product_id)
-    # Promotion: Same category ke aur products dikhao (excluding current)
     related = Product.query.filter(Product.category_id == product.category_id, Product.id != product_id).limit(3).all()
     return render_template('product_view.html', product=product, related=related)
 
@@ -81,6 +79,9 @@ def product_view(product_id):
 def submit_order():
     try:
         data = request.json
+        # Convert items to string if it's a list from frontend
+        items_str = str(data['items']) if isinstance(data['items'], (list, dict)) else data['items']
+        
         new_order = Order(
             name=data['name'],
             phone=data['phone'],
@@ -91,7 +92,7 @@ def submit_order():
             pincode=data['pincode'],
             custom_details=data['custom_details'],
             total=data['total'],
-            items=str(data['items'])
+            items=items_str
         )
         db.session.add(new_order)
         db.session.commit()
@@ -175,7 +176,13 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
+# --- Initialization & Gunicorn Start ---
+
+# Table creation Render par deployment ke waqt kaam aayega
+with app.app_context():
+    db.create_all()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all() 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Local run ke liye debug=True, Render ke liye gunicorn use hoga
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
