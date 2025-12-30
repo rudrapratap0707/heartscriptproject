@@ -3,194 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeartScript | Express Your Love</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>HeartScript | The Art of Handwritten Emotions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family: 'Segoe UI', sans-serif;}
-        body{background:#fff0f6; color:#333;}
-        header{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;padding:20px;text-align:center;position:sticky;top:0;z-index:1000;}
-        .nav-links{margin-top:10px;}
-        .nav-links a{color: white; text-decoration: none; margin: 0 15px; font-weight: 600; cursor: pointer;}
-        .page{display:none;} .page.active{display:block;}
+        :root {
+            --primary: #ff416c;
+            --dark: #1a1a1a;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #fff; color: var(--dark); line-height: 1.6; }
+
+        /* Navbar Customization */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 8%; background: white; position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--primary); text-decoration: none; font-weight: bold; }
+        .nav-links a { text-decoration: none; color: var(--dark); margin-left: 25px; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Hero Section - Promotion Focused */
+        .hero {
+            height: 85vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1516410529446-2c777cb7366d?auto=format&fit=crop&w=1500');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; text-align: center; padding: 0 20px;
+        }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 4rem; margin-bottom: 20px; animation: fadeIn 1.5s; }
+        .hero p { font-size: 1.2rem; max-width: 600px; margin-bottom: 30px; }
+        .btn-cta { 
+            background: var(--primary); color: white; padding: 18px 45px; 
+            border-radius: 50px; text-decoration: none; font-weight: 600; 
+            font-size: 1.1rem; transition: 0.4s; box-shadow: 0 5px 20px rgba(255, 65, 108, 0.4);
+        }
+        .btn-cta:hover { transform: scale(1.05); background: #ff4b2b; }
+
+        /* Professional About Section (500 Words Optimized) */
+        .about-section { padding: 100px 10%; background: #fdfdfd; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .about-content { text-align: justify; }
+        .about-content h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 20px; color: var(--primary); }
+        .about-content p { margin-bottom: 15px; color: #555; font-size: 1.05rem; }
+
+        /* Team Section with Images */
+        .team-section { padding: 80px 10%; text-align: center; }
+        .team-grid { display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; margin-top: 50px; }
+        .team-card { width: 280px; transition: 0.3s; }
+        .team-img-wrapper { 
+            width: 200px; height: 200px; margin: 0 auto 20px; 
+            border-radius: 50%; overflow: hidden; border: 5px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .team-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        .team-card h3 { margin-bottom: 5px; font-family: 'Playfair Display', serif; }
+        .team-card p { color: var(--primary); font-weight: 600; font-size: 0.9rem; }
+
+        /* Contact Founder / Footer Promotion */
+        footer { background: var(--dark); color: white; padding: 80px 10% 40px; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 50px; }
+        .founder-box { 
+            background: rgba(255,255,255,0.05); padding: 30px; border-radius: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        .founder-box h3 { margin-bottom: 15px; }
+        .founder-box a { color: var(--primary); text-decoration: none; font-weight: bold; }
         
-        .hero{height: 80vh; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; text-align: center;}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .container{width:90%; max-width:1100px; margin:auto; padding:40px 0;}
-        .products{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px;}
-        .card{background:#fff; border-radius:15px; box-shadow:0 10px 20px rgba(0,0,0,0.1); overflow:hidden; text-align:center; padding-bottom:15px;}
-        .card img{width:100%; height:200px; object-fit:cover;}
-        
-        button{border:none; border-radius:10px; cursor:pointer; font-weight:bold; padding:12px 25px; transition: 0.3s; margin-top:10px;}
-        .btn-primary{background:#ff416c; color:#fff;}
-        .cart-status{position:fixed; bottom:20px; right:20px; background:#333; color:white; padding:15px; border-radius:50px; cursor:pointer; z-index: 999;}
-        .order-box{max-width:500px; margin:auto; background:#fff; padding:30px; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.1);}
-        input, textarea{width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;}
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <h1 onclick="showPage('landing')" style="cursor:pointer">HeartScript ❤️</h1>
-    <div class="nav-links">
-        <a onclick="showPage('landing')">HOME</a>
-        <a onclick="showPage('shop')">GIFT SHOP</a>
-        <a href="/admin" target="_blank">ADMIN PANEL</a>
+    <nav>
+        <a href="/" class="logo">HeartScript</a>
+        <div class="nav-links">
+            <a href="/shop">Collection</a>
+            <a href="#about">Our Story</a>
+            <a href="#team">The Team</a>
+            <a href="/login"><i class="fas fa-lock"></i> Admin</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Legacy in Ink.</h1>
+        <p>We preserve the intimacy of handwritten words in a digital age. Premium calligraphy, bespoke letters, and gifts that carry a heartbeat.</p>
+        <a href="/shop" class="btn-cta">Explore Shop</a>
     </div>
-</header>
 
-<div class="cart-status" onclick="showCart()">🛒 Cart (<span id="cartCount">0</span>)</div>
-
-<div id="landing" class="page active">
-    <section class="hero">
-        <h1>Handwritten Feelings, Delivered.</h1>
-        <p>Make your loved ones feel special with personalized gifts.</p>
-        <button class="btn-primary" onclick="showPage('shop')">Explore Shop 🎁</button>
-    </section>
-</div>
-
-<div id="shop" class="container page">
-    <h2 style="text-align:center; margin-bottom:30px;">Choose a Romantic Gift 💕</h2>
-    <div class="products" id="productList"></div>
-</div>
-
-<div id="cartPage" class="container page">
-    <div class="order-box">
-        <h3>Your Cart 🛒</h3>
-        <div id="cartItems"></div>
-        <hr>
-        <h4>Total: ₹<span id="cartTotal">0</span></h4>
-        <button class="btn-primary" style="width:100%" onclick="showPage('orderForm')">Proceed to Checkout</button>
-    </div>
-</div>
-
-<div id="orderForm" class="container page">
-    <div class="order-box">
-        <h3>Delivery Details 💌</h3>
-        <input id="userName" placeholder="Your Name">
-        <input id="userPhone" placeholder="Mobile Number">
-        <textarea id="userAddress" placeholder="Full Address"></textarea>
-        <button class="btn-primary" style="width:100%" onclick="placeOrder()">Confirm & Download Bill ❤️</button>
-    </div>
-</div>
-
-<div id="thanks" class="container page" style="text-align:center;">
-    <div class="order-box">
-        <h2>Order Successful! 🎉</h2>
-        <p>Your invoice has been downloaded. We will contact you soon.</p>
-        <button class="btn-primary" onclick="showPage('landing')">Go to Home</button>
-    </div>
-</div>
-
-<script>
-    const products = [
-        {name: "Handwritten Letter", price: 199, img: "https://images.unsplash.com/photo-1521220609214-a8552380c7a4?w=500"},
-        {name: "Romantic Gift Box", price: 599, img: "https://images.unsplash.com/photo-1549465220-1d8c9d9c6703?w=500"},
-        {name: "Memory Frame", price: 399, img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500"}
-    ];
-    let cart = [];
-
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    function renderShop() {
-        document.getElementById('productList').innerHTML = products.map(p => `
-            <div class="card">
-                <img src="${p.img}">
-                <h3>${p.name}</h3>
-                <p>₹${p.price}</p>
-                <button class="btn-primary" onclick="addToCart('${p.name}', ${p.price})">Add to Cart</button>
+    <section class="about-section" id="about">
+        <div class="about-grid">
+            <div class="about-content">
+                <h2>The Art of Expression</h2>
+                <p>
+                    In an era where messages are sent in seconds and forgotten in minutes, HeartScript stands as a sanctuary for the words that deserve to last a lifetime. Our journey began with a simple fountain pen and a profound realization: the human touch is irreplaceable. 
+                </p>
+                <p>
+                    HeartScript is not just a brand; it is a movement dedicated to the revival of traditional calligraphy and handwritten intimacy. We believe that every stroke of a nib carries an emotion that a keyboard simply cannot replicate. Our artisans spend hours perfecting the curves and slants of every letter, ensuring that your message—be it a love letter, an invitation, or a poetic gift—is transformed into a timeless masterpiece.
+                </p>
+                <p>
+                    We promote the idea that true luxury lies in patience and personalization. When you choose HeartScript, you are not just buying a product; you are commissioning a piece of art. From the choice of premium cotton paper to the selection of archival-grade inks, we ensure that your legacy is preserved for generations.
+                </p>
             </div>
-        `).join('');
-    }
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1515377611322-a99b62bc3d6d?auto=format&fit=crop&w=800" alt="Calligraphy Art" style="width: 100%; border-radius: 20px; box-shadow: 20px 20px 0 var(--primary);">
+            </div>
+        </div>
+    </section>
 
-    function addToCart(name, price) {
-        cart.push({name, price});
-        document.getElementById('cartCount').innerText = cart.length;
-        alert(name + " added!");
-    }
+    <section class="team-section" id="team" style="background: #fff;">
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem;">Meet the Artisans</h2>
+        <p style="color: #666;">The creative souls behind every HeartScript creation.</p>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-img-wrapper">
+                    <img src="https://via.placeholder.com/200" alt="Founder"> </div>
+                <h3>[Founder Name]</h3>
+                <p>Founder & Lead Calligrapher</p>
+            </div>
+            <div class="team-card">
+                <div class="team-img-wrapper">
+                    <img src="https://via.placeholder.com/200" alt="Creative Lead"> </div>
+                <h3>[Team Member]</h3>
+                <p>Creative Strategist</p>
+            </div>
+        </div>
+    </section>
 
-    function showCart() {
-        let total = 0;
-        const list = document.getElementById('cartItems');
-        list.innerHTML = cart.length ? cart.map(i => {
-            total += i.price;
-            return `<p>${i.name} - ₹${i.price}</p>`;
-        }).join('') : "Cart is empty";
-        document.getElementById('cartTotal').innerText = total;
-        showPage('cartPage');
-    }
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h2 class="logo" style="color: white; margin-bottom: 20px;">HeartScript</h2>
+                <p style="color: #bbb;">Crafting emotions, one letter at a time. Based in India, serving hearts worldwide.</p>
+            </div>
+            <div>
+                <h4>Quick Links</h4><br>
+                <a href="/shop" style="color: #bbb; text-decoration: none;">Shop Now</a><br>
+                <a href="#about" style="color: #bbb; text-decoration: none;">Our Story</a>
+            </div>
+            <div class="founder-box">
+                <h3>Contact Founder</h3>
+                <p>For collaborations and direct inquiries:</p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:official@heartscript.com">official@heartscript.com</a></p>
+                <p><i class="fab fa-instagram"></i> @HeartScriptOfficial</p>
+            </div>
+        </div>
+        <center style="border-top: 1px solid #333; padding-top: 30px; color: #666;">
+            &copy; 2025 HeartScript. All Rights Reserved.
+        </center>
+    </footer>
 
-    function placeOrder() {
-        const name = document.getElementById('userName').value;
-        const phone = document.getElementById('userPhone').value;
-        const address = document.getElementById('userAddress').value;
-        const total = document.getElementById('cartTotal').innerText;
-        
-        if(!name || !phone || !address) {
-            alert("Please fill all details!");
-            return;
-        }
-
-        const orderData = {
-            name: name,
-            phone: phone,
-            address: address,
-            total: total,
-            items: cart
-        };
-
-        // Render URL for connection
-        const API_URL = 'https://heartscriptproject.onrender.com/submit_order';
-
-        fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(orderData)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === 'success') {
-                // 1. Download PDF using jsPDF
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.setFontSize(20);
-                doc.text("HeartScript Invoice", 20, 20);
-                doc.setFontSize(12);
-                doc.text("Customer: " + name, 20, 40);
-                doc.text("Phone: " + phone, 20, 50);
-                doc.text("Address: " + address, 20, 60);
-                doc.text("Total Amount: Rs." + total, 20, 80);
-                doc.text("Thank you for ordering with HeartScript!", 20, 100);
-                doc.save("HeartScript_Bill.pdf");
-
-                // 2. WhatsApp Redirect
-                let itemsList = cart.map(i => i.name).join(", ");
-                let waMessage = `*Naya Order!*%0A*Naam:* ${name}%0A*Phone:* ${phone}%0A*Items:* ${itemsList}%0A*Total:* ₹${total}`;
-                
-                // APNA 10-DIGIT NUMBER YAHA LIKHEIN (91 ke saath)
-                let myNumber = "91XXXXXXXXXX"; 
-                
-                alert("Order Saved & Bill Downloaded! Redirecting to WhatsApp...");
-                
-                cart = [];
-                document.getElementById('cartCount').innerText = "0";
-                
-                // Final Redirect to WhatsApp
-                window.location.href = `https://wa.me/${myNumber}?text=${waMessage}`;
-            } else {
-                alert("Server error: " + data.message);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Connection Error! Backend might be sleeping. Please try again in 1 minute.");
-        });
-    }
-
-    renderShop();
-</script>
 </body>
 </html>
