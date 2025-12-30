@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HeartScript Admin - SQL</title>
+    <style>
+        body{font-family:sans-serif; padding:30px; background:#f4f4f4;}
+        table{width:100%; border-collapse:collapse; background:white; margin-top:20px; box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+        th, td{border:1px solid #ddd; padding:12px; text-align:left;}
+        th{background:#ff416c; color:white;}
+        .btn-delete{background:#ff4b2b; color:white; padding:5px 10px; text-decoration:none; border-radius:5px; font-size:12px;}
+    </style>
+</head>
+<body>
+    <h1>SQL Admin Dashboard 📊</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.date_ordered.strftime('%d %b, %H:%M') }}</td>
+                <td>{{ order.name }}</td>
+                <td>{{ order.phone }}</td>
+                <td>₹{{ order.total }}</td>
+                <td>
+                    <a href="/delete_order/{{ order.id }}" class="btn-delete" onclick="return confirm('Pakka delete karna hai?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><a href="/">← Go to Shop</a></p>
+</body>
+</html>
