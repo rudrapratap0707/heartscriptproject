@@ -2,20 +2,27 @@ import os
 from flask import Flask, render_template, request, jsonify, flash, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-app.secret_key = "HeartScript_Secure_Vault_#2025" 
+
+# --- Security & Session Fix for Render ---
+app.secret_key = os.environ.get('SECRET_KEY', 'HeartScript_Secure_Vault_#2025')
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE='Lax',
+    PERMANENT_SESSION_LIFETIME=timedelta(days=1)
+)
+
 CORS(app)
 
-# --- Database Configuration (Render Fix) ---
+# --- Database Configuration (Render Stable Path) ---
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-# Render par agar DATABASE_URL nahi milti toh wo automatically sahi SQLite path banayega
+# Ye line ensure karti hai ki Render par file permissions ka error na aaye
 sqlite_path = 'sqlite:///' + os.path.join(basedir, 'database.db')
-db_uri = os.environ.get('DATABASE_URL', sqlite_path)
 
-# Render PostgreSQL (Neon) ke purane format 'postgres://' ko fix karne ke liye
+db_uri = os.environ.get('DATABASE_URL', sqlite_path)
 if db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 
@@ -23,7 +30,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# --- Database Models ---
+# --- Database Models (No Content Deleted) ---
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -81,18 +88,11 @@ def submit_order():
     try:
         data = request.json
         items_str = str(data['items']) if isinstance(data['items'], (list, dict)) else data['items']
-        
         new_order = Order(
-            name=data['name'],
-            phone=data['phone'],
-            email=data['email'],
-            house_no=data['house_no'],
-            address=data['address'],
-            landmark=data.get('landmark', ''),
-            pincode=data['pincode'],
-            custom_details=data['custom_details'],
-            total=data['total'],
-            items=items_str
+            name=data['name'], phone=data['phone'], email=data['email'],
+            house_no=data['house_no'], address=data['address'], landmark=data.get('landmark', ''),
+            pincode=data['pincode'], custom_details=data['custom_details'],
+            total=data['total'], items=items_str
         )
         db.session.add(new_order)
         db.session.commit()
@@ -113,6 +113,7 @@ def login():
     if request.method == 'POST':
         password = request.form.get('password')
         if password == 'HeartScript@Admin2025': 
+            session.permanent = True
             session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         flash("Wrong Password!", "danger")
@@ -122,10 +123,13 @@ def login():
 def admin():
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
-    orders = Order.query.order_by(Order.date_ordered.desc()).all()
-    products = Product.query.all()
-    categories = Category.query.all()
-    return render_template('admin.html', orders=orders, products=products, categories=categories)
+    try:
+        orders = Order.query.order_by(Order.date_ordered.desc()).all()
+        products = Product.query.all()
+        categories = Category.query.all()
+        return render_template('admin.html', orders=orders, products=products, categories=categories)
+    except Exception as e:
+        return f"Database Error: {str(e)}"
 
 @app.route('/add_category', methods=['POST'])
 def add_category():
@@ -179,12 +183,11 @@ def logout():
     session.clear()
     return redirect(url_for('home'))
 
-# --- Startup Logic ---
+# --- Startup ---
 
 with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    # Production mein debug=False hona chahiye
     app.run(host='0.0.0.0', port=port, debug=False)
