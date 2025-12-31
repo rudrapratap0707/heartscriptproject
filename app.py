@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 # --- Security & Session Fix for Render ---
+# Secret key aur session configurations login issue ko fix karti hain
 app.secret_key = os.environ.get('SECRET_KEY', 'HeartScript_Secure_Vault_#2025')
 app.config.update(
     SESSION_COOKIE_SECURE=True,
@@ -19,7 +20,6 @@ CORS(app)
 
 # --- Database Configuration (Render Stable Path) ---
 basedir = os.path.abspath(os.path.dirname(__file__))
-# Ye line ensure karti hai ki Render par file permissions ka error na aaye
 sqlite_path = 'sqlite:///' + os.path.join(basedir, 'database.db')
 
 db_uri = os.environ.get('DATABASE_URL', sqlite_path)
@@ -185,13 +185,11 @@ def logout():
 
 # --- Startup ---
 
-# --- Startup Logic (Temporary Reset) ---
 with app.app_context():
-    # Pehle purani table delete hogi phir nayi banegi (Email column ke saath)
-    # Note: Isse aapke purane dummy orders delete ho jayenge
-    db.drop_all() 
+    # Pehle column mismatch error theek karne ke liye drop_all zaroori tha, 
+    # ab tables sahi hain isliye sirf create_all() kaafi hai.
     db.create_all()
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
-
