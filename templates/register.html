@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | HeartScript</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        .register-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 95%;
+        }
+        .brand-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #ff4d6d;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .tagline {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .section-divider {
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 5px;
+            margin: 25px 0 15px;
+            color: #ff4d6d;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.85rem;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            font-size: 0.9rem;
+        }
+        .form-control:focus {
+            border-color: #ff4d6d;
+            box-shadow: 0 0 0 0.25rem rgba(255, 77, 109, 0.15);
+        }
+        .security-box {
+            background: #fffcfc;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #ffe5e9;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+        /* New style for filled questions */
+        .security-box.filled {
+            border-color: #ff4d6d;
+            background-color: #fff0f3;
+        }
+        .btn-register {
+            background-color: #ff4d6d;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            width: 100%;
+            font-weight: 600;
+            color: white;
+            margin-top: 30px;
+            transition: 0.3s;
+        }
+        .btn-register:hover {
+            background-color: #ff758f;
+            transform: translateY(-2px);
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .login-link a {
+            color: #ff4d6d;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .counter-badge {
+            background: #ff4d6d;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="brand-name">HeartScript</div>
+    <p class="tagline">Create your account for bespoke artistry</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('register') }}" method="POST" id="registrationForm">
+        
+        <div class="section-divider"><i class="fas fa-user me-2"></i> Personal Details</div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="username" class="form-control" placeholder="Enter full name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Email ID</label>
+                <input type="email" name="email" class="form-control" placeholder="email@example.com" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" name="phone" class="form-control" placeholder="10-digit number" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">WhatsApp Number</label>
+                <input type="tel" name="whatsapp" class="form-control" placeholder="For customization updates" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Create a strong password" required minlength="6">
+        </div>
+
+        <div class="section-divider"><i class="fas fa-truck me-2"></i> Shipping Address</div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">House Number</label>
+                <input type="text" name="house_no" class="form-control" placeholder="Flat/House No" required>
+            </div>
+            <div class="col-md-8 mb-3">
+                <label class="form-label">Landmark</label>
+                <input type="text" name="landmark" class="form-control" placeholder="e.g. Near Apollo Hospital" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Area / Street / Colony</label>
+            <input type="text" name="area" class="form-control" placeholder="Full area details" required>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Pincode</label>
+                <input type="text" name="pincode" class="form-control" placeholder="6-digit PIN" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">City</label>
+                <input type="text" name="city" class="form-control" placeholder="City" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">State</label>
+                <input type="text" name="state" class="form-control" placeholder="State" required>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <i class="fas fa-lock me-2"></i> Security Questions 
+            <span class="counter-badge" id="ansCounter">0 / 3 Filled</span>
+        </div>
+        <p class="text-muted mb-3" style="font-size: 0.8rem;">Choose and answer <b>at least 3</b> questions to secure your account recovery.</p>
+        
+        <div class="security-box">
+            <label class="form-label">1. Mother's maiden name?</label>
+            <input type="text" name="ans1" class="form-control form-control-sm sec-input" placeholder="Type answer here...">
+        </div>
+        <div class="security-box">
+            <label class="form-label">2. Your first pet's name?</label>
+            <input type="text" name="ans2" class="form-control form-control-sm sec-input" placeholder="Type answer here...">
+        </div>
+        <div class="security-box">
+            <label class="form-label">3. Your first school's name?</label>
+            <input type="text" name="ans3" class="form-control form-control-sm sec-input" placeholder="Type answer here...">
+        </div>
+        <div class="security-box">
+            <label class="form-label">4. Your city of birth?</label>
+            <input type="text" name="ans4" class="form-control form-control-sm sec-input" placeholder="Type answer here...">
+        </div>
+        <div class="security-box">
+            <label class="form-label">5. Your childhood nickname?</label>
+            <input type="text" name="ans5" class="form-control form-control-sm sec-input" placeholder="Type answer here...">
+        </div>
+        <div class="security-box">
+            <label class="form-label">6. Favorite book or movie?</label>
+            <input type="text" name="ans6" class="form-control form-control-sm sec-input" placeholder="Type answer here...">
+        </div>
+        <div class="security-box">
+            <label class="form-label">7. Model of your first bike/car?</label>
+            <input type="text" name="ans7" class="form-control form-control-sm sec-input" placeholder="Type answer here...">
+        </div>
+
+        <button type="submit" class="btn-register" id="submitBtn">Create Official Account</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="{{ url_for('user_login') }}">Login here</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const form = document.getElementById('registrationForm');
+    const inputs = document.querySelectorAll('.sec-input');
+    const counterBadge = document.getElementById('ansCounter');
+
+    function updateCounter() {
+        let filledCount = 0;
+        inputs.forEach(input => {
+            const parent = input.parentElement;
+            if (input.value.trim() !== "") {
+                filledCount++;
+                parent.classList.add('filled');
+            } else {
+                parent.classList.remove('filled');
+            }
+        });
+
+        counterBadge.innerText = `${filledCount} / 3 Filled`;
+        
+        if (filledCount >= 3) {
+            counterBadge.style.background = "#28a745"; // Green if safe
+        } else {
+            counterBadge.style.background = "#ff4d6d"; // Pink if incomplete
+        }
+        return filledCount;
+    }
+
+    // Har input par counter update karo
+    inputs.forEach(input => {
+        input.addEventListener('input', updateCounter);
+    });
+
+    // Form submission validation
+    form.onsubmit = function(e) {
+        const count = updateCounter();
+        if (count < 3) {
+            alert("Security Alert: Please answer at least 3 security questions to ensure you can recover your account if you forget your password.");
+            e.preventDefault();
+            return false;
+        }
+    };
+</script>
+
+</body>
+</html>
