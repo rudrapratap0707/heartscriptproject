@@ -3,140 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The HeartScript Collection | Handcrafted Emotions</title>
+    <title>HeartScript | Handcrafted Romantic Gifts</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,400&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&family=Great+Vibes&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
     
     <style>
         :root { 
-            --primary: #ff416c; --accent: #7b1113; --gold: #c5a059;
-            --dark: #0f0f0f; --soft-rose: #fff0f3; --deep-red: #4a0404;
+            --romantic-red: #ff4d6d; 
+            --soft-blush: #fff0f3;
+            --rose-gold: #e29578;
+            --deep-rose: #590d22; /* The "Hard" but Warm Color */
+            --pure-white: #ffffff;
+            --text-dark: #2b2d42;
+            --text-muted: #6d6875;
+            --shadow-soft: 0 10px 30px rgba(255, 77, 109, 0.1);
         }
 
         body { 
             font-family: 'Poppins', sans-serif; margin: 0; 
-            background: #fffafa; color: var(--dark); overflow-x: hidden; 
+            background-color: #2d0a10; /* Solid Deep Hard Color */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 77, 109, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(226, 149, 120, 0.1) 0%, transparent 40%),
+                url("https://www.transparenttextures.com/patterns/cream-paper.png");
+            background-attachment: fixed;
+            color: var(--pure-white); overflow-x: hidden; 
         }
 
-        /* Navbar */
+        /* Modern & Floating Navbar */
         nav { 
             padding: 15px 8%; background: rgba(255, 255, 255, 0.95); display: flex; 
             justify-content: space-between; align-items: center; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: sticky; 
-            top: 0; z-index: 1000; backdrop-filter: blur(15px); 
+            position: sticky; top: 0; z-index: 1000; 
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--soft-blush);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         }
-        .logo { font-family: 'Great Vibes', cursive; color: var(--primary); text-decoration: none; font-size: 35px; }
+        .logo { 
+            font-family: 'Great Vibes', cursive; color: var(--romantic-red); 
+            text-decoration: none; font-size: 38px; font-weight: 400;
+        }
+        
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; color: var(--text-dark); margin-left: 28px; 
+            font-weight: 500; font-size: 0.85rem; text-transform: uppercase; 
+            letter-spacing: 1px; transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--romantic-red); }
+        
+        .btn-profile { 
+            background: var(--romantic-red); color: white !important; 
+            padding: 10px 22px; border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
+        }
 
-        /* Shop Header */
+        /* Romantic Header */
         .shop-header { 
-            text-align: center; padding: 100px 20px 60px; 
-            background: radial-gradient(circle at center, #fff 0%, #ffeef2 100%);
+            text-align: center; padding: 120px 20px 80px; 
+            background: linear-gradient(to bottom, rgba(45, 10, 16, 0.5), transparent);
         }
-        .shop-header h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--deep-red); margin-bottom: 10px; }
+        .shop-header h1 { 
+            font-family: 'Playfair Display', serif; font-size: 4.2rem; 
+            color: var(--pure-white); margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+        .shop-header p { 
+            font-size: 1.1rem; color: #ffccd5; max-width: 650px; 
+            margin: 0 auto; line-height: 1.7; font-weight: 300;
+        }
+        .heart-divider {
+            color: var(--romantic-red); font-size: 1.5rem; margin: 20px 0;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+        }
+        .heart-divider::before, .heart-divider::after {
+            content: ""; height: 1px; width: 60px; background: rgba(255,255,255,0.2);
+        }
 
-        /* Category Filter Chips */
+        /* Minimal Aesthetic Filter */
         .filter-container { 
-            display: flex; justify-content: center; gap: 12px; padding: 20px 8%; 
-            flex-wrap: wrap; margin-bottom: 30px;
+            display: flex; justify-content: center; gap: 15px; padding: 0 8% 50px; 
+            flex-wrap: wrap; 
         }
         .filter-btn { 
-            padding: 10px 25px; border-radius: 30px; border: 1px solid #ddd; 
-            background: white; cursor: pointer; transition: 0.3s; font-size: 0.85rem;
-            font-weight: 500; color: #555; text-decoration: none;
+            padding: 12px 28px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); 
+            background: rgba(255, 255, 255, 0.05); cursor: pointer; transition: 0.4s; 
+            font-size: 0.85rem; font-weight: 500; color: var(--pure-white); 
+            text-decoration: none;
         }
-        /* Fix: Active class based on URL param from app.py */
-        .filter-btn.active { 
-            background: var(--primary); color: white; border-color: var(--primary); 
-            box-shadow: 0 5px 15px rgba(255, 65, 108, 0.3);
+        .filter-btn.active, .filter-btn:hover { 
+            background: var(--pure-white); color: var(--deep-rose); 
+            border-color: var(--pure-white); transform: translateY(-2px);
         }
 
-        /* Products Grid */
-        .category-section { padding: 0 8% 60px; }
+        /* Soft Romantic Product Cards */
+        .category-section { padding: 0 8% 100px; }
         .products-grid { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
             gap: 40px; 
         }
         
         .product-card { 
-            background: white; border-radius: 20px; overflow: hidden; 
-            transition: 0.4s; border: 1px solid #f0f0f0; position: relative;
-            display: flex; flex-direction: column;
+            background: var(--pure-white); border-radius: 24px; overflow: hidden; 
+            transition: 0.5s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            position: relative; display: flex; flex-direction: column;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
         }
-        .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .product-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
         
-        .img-container { height: 320px; overflow: hidden; position: relative; }
-        .product-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+        .img-container { height: 380px; overflow: hidden; position: relative; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; transition: 1s ease; }
         .product-card:hover .product-img { transform: scale(1.08); }
         
         .exclusive-tag {
-            position: absolute; top: 15px; left: 15px; background: var(--primary);
-            color: white; padding: 5px 12px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; z-index: 10;
+            position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.9);
+            color: var(--romantic-red); padding: 6px 15px; border-radius: 10px; 
+            font-size: 0.7rem; font-weight: 700; z-index: 10; text-transform: uppercase;
+            letter-spacing: 1px; backdrop-filter: blur(5px);
         }
 
-        .product-info { padding: 25px; text-align: center; flex-grow: 1; }
-        .product-info h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin: 0 0 10px 0; }
-        .price { font-size: 1.3rem; font-weight: 600; color: var(--primary); display: block; margin-bottom: 20px; }
+        .product-info { 
+            padding: 30px; text-align: center; flex-grow: 1; 
+            background: var(--pure-white); color: var(--text-dark);
+        }
+        .product-info h3 { 
+            font-family: 'Playfair Display', serif; font-size: 1.6rem; 
+            margin: 0 0 10px 0; color: var(--deep-rose); 
+        }
+        .price { 
+            font-size: 1.6rem; font-weight: 700; color: var(--romantic-red); 
+            display: block; margin-bottom: 25px; 
+        }
 
-        /* Button Styling */
-        .btn-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .btn-view-details { 
-            background: #f8f8f8; color: var(--dark); border: 1px solid #eee; padding: 12px; 
-            border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.8rem;
-            text-decoration: none; transition: 0.3s;
+            background: var(--soft-blush); color: var(--romantic-red); border: none; 
+            padding: 14px; border-radius: 12px; cursor: pointer; font-weight: 600; 
+            font-size: 0.85rem; text-decoration: none; transition: 0.3s;
         }
         .btn-order-quick { 
-            background: var(--dark); color: white; border: none; padding: 12px; 
-            border-radius: 50px; cursor: pointer; font-weight: 600; font-size: 0.8rem;
+            background: var(--romantic-red); color: white; border: none; padding: 14px; 
+            border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 0.85rem; 
             transition: 0.3s;
         }
-        .btn-view-details:hover { background: #eee; }
-        .btn-order-quick:hover { background: var(--primary); }
+        .btn-view-details:hover { background: #ffe0e6; }
+        .btn-order-quick:hover { filter: brightness(1.1); transform: scale(1.03); }
 
-        /* Modal Styles */
+        /* Elegant Order Modal */
         #modal-overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; 
-            backdrop-filter: blur(8px); padding: 20px;
+            background: rgba(43, 45, 66, 0.8); z-index: 2000; justify-content: center; 
+            align-items: center; backdrop-filter: blur(8px); padding: 20px;
         }
         .modal-content { 
-            background: white; padding: 40px; border-radius: 25px; width: 100%; max-width: 500px; 
-            max-height: 90vh; overflow-y: auto; position: relative;
+            background: white; padding: 45px; border-radius: 30px; width: 100%; 
+            max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; 
+            color: var(--text-dark);
+        }
+        .modal-content h2 { 
+            font-family: 'Dancing Script', cursive; font-size: 3rem; 
+            color: var(--romantic-red); text-align: center; margin-bottom: 5px; 
         }
 
         input, textarea { 
-            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; 
-            border-radius: 8px; font-family: inherit; box-sizing: border-box;
+            width: 100%; padding: 15px; margin: 10px 0; border: 1.5px solid #eee; 
+            border-radius: 12px; font-family: inherit; font-size: 0.95rem;
+            transition: 0.3s; background: #fafafa;
         }
+        input:focus, textarea:focus { border-color: var(--romantic-red); outline: none; background: #fff; }
+        
         .btn-submit { 
-            background: var(--primary); color: white; border: none; padding: 15px; 
-            width: 100%; border-radius: 50px; font-weight: bold; cursor: pointer; margin-top: 10px;
+            background: var(--romantic-red); color: white; border: none; padding: 18px; 
+            width: 100%; border-radius: 15px; font-weight: 600; cursor: pointer; 
+            margin-top: 15px; font-size: 1rem; transition: 0.3s;
         }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3); }
 
-        footer { background: var(--dark); color: white; text-align: center; padding: 60px 20px; margin-top: 50px; }
+        footer { 
+            background: #fff; color: var(--text-muted); text-align: center; 
+            padding: 80px 20px; border-top: 1px solid var(--soft-blush); 
+        }
+        .footer-logo { font-family: 'Great Vibes', cursive; font-size: 45px; color: var(--romantic-red); margin-bottom: 15px; }
+
+        .whatsapp-float {
+            position: fixed; bottom: 30px; right: 30px; background: #25d366; 
+            color: white; width: 60px; height: 60px; border-radius: 20px; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 30px; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3); 
+            z-index: 2000; transition: 0.4s;
+        }
+        .whatsapp-float:hover { transform: translateY(-5px) rotate(8deg); }
+
+        /* Extra Details for Length & Beauty */
+        .trust-badges {
+            display: flex; justify-content: center; gap: 30px; margin-top: 40px;
+            font-size: 0.75rem; color: #ffccd5; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .trust-badges span i { margin-right: 8px; color: var(--romantic-red); }
+        
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="/" class="logo">HeartScript</a>
+        <a href="{{ url_for('home') }}" class="logo">HeartScript</a>
         <div class="nav-links">
-            <a href="/" style="text-decoration: none; color: var(--dark); font-weight: 500;"><i class="fas fa-home"></i> Home</a>
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('profile') }}" class="btn-profile">My Orders</a>
+            {% else %}
+                <a href="{{ url_for('user_login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Join Us</a>
+            {% endif %}
         </div>
     </nav>
 
     <div class="shop-header">
-        <h1>Our Collection</h1>
-        <p>Choose a canvas for your soul's message.</p>
+        <div class="heart-divider"><i class="fas fa-heart"></i></div>
+        <h1>HEART SCRIPT - Write your Emotions</h1>
+        <p>Because some feelings are too beautiful for a text message. Our artists hand-script your emotions on premium paper, delivered with love. </p>
+        
+        <div class="trust-badges">
+            <span><i class="fas fa-pen-nib"></i> 100% Handwritten</span>
+            <span><i class="fas fa-truck"></i> Pan India Delivery</span>
+            <span><i class="fas fa-lock"></i> 100% Private</span>
+        </div>
     </div>
 
     <div class="filter-container">
-        <a href="/shop" class="filter-btn {% if not selected_cat or selected_cat == 'None' %}active{% endif %}">
-            All Masterpieces
+        <a href="{{ url_for('shop') }}" class="filter-btn {% if not selected_cat or selected_cat == 'None' %}active{% endif %}">
+            All Creations
         </a>
         {% for cat in categories %}
-        <a href="/shop?category={{ cat.id }}" 
+        <a href="{{ url_for('shop', category=cat.id) }}" 
            class="filter-btn {% if selected_cat == cat.id|string %}active{% endif %}">
-           {{ cat.name }}
+            {{ cat.name }}
         </a>
         {% endfor %}
     </div>
@@ -145,31 +246,29 @@
         <div class="products-grid">
             {% for product in products %}
             <div class="product-card">
-                <div class="exclusive-tag">HANDWRITTEN</div>
+                <div class="exclusive-tag">Handcrafted</div>
                 <div class="img-container">
                     <img src="{{ product.image_url }}" class="product-img" alt="{{ product.name }}">
                 </div>
                 <div class="product-info">
                     <h3>{{ product.name }}</h3>
-                    <p style="font-size: 0.8rem; color: #777; margin-bottom: 15px; height: 40px; overflow: hidden;">
-                        {{ product.description[:80] }}...
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px;">
+                        {{ product.description[:90] if product.description else 'A soulful handwritten gift to make your special someone feel truly loved.' }}...
                     </p>
                     <span class="price">₹{{ product.price }}</span>
                     
                     <div class="btn-actions">
-                        <a href="/product/{{ product.id }}" class="btn-view-details">
-                            View Story
-                        </a>
-                        <button class="btn-order-quick" onclick="openCheckout('{{ product.name }}', '{{ product.price }}')">
-                            Quick Order
+                        <a href="{{ url_for('product_view', product_id=product.id) }}" class="btn-view-details">Details</a>
+                        <button class="btn-order-quick" onclick="handleQuickOrder('{{ product.name }}', '{{ product.price }}')">
+                            <i class="fas fa-heart"></i> Order Now
                         </button>
                     </div>
                 </div>
             </div>
             {% else %}
-            <div style="grid-column: 1/-1; text-align: center; padding: 80px 20px; color: #888;">
-                <i class="fas fa-feather" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                <p>This collection is currently being handcrafted. Check back soon!</p>
+            <div style="grid-column: 1/-1; text-align: center; padding: 100px 20px; color: #ffccd5;">
+                <i class="far fa-envelope-open" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                <p style="font-size: 1.2rem;">Our pens are resting. New collections arriving soon!</p>
             </div>
             {% endfor %}
         </div>
@@ -177,38 +276,54 @@
 
     <div id="modal-overlay">
         <div class="modal-content">
-            <span onclick="closeCheckout()" style="position:absolute; top:20px; right:25px; font-size:25px; cursor:pointer;">&times;</span>
-            <h2 style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--primary); text-align: center;">Quick Checkout</h2>
-            <p id="item-info" style="text-align:center; font-weight:600; margin-bottom:20px;"></p>
+            <span onclick="closeCheckout()" style="position:absolute; top:25px; right:30px; font-size:30px; cursor:pointer; color: #ccc;">&times;</span>
+            <h2>Send a Gift</h2>
+            <p id="item-info" style="text-align:center; font-weight:600; margin-bottom:25px; color: var(--romantic-red);"></p>
             
-            <input type="text" id="name" placeholder="Full Name" required>
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="tel" id="phone" placeholder="WhatsApp Number" required>
+            <input type="text" id="cust_name" placeholder="Your Name" value="{{ session.get('user_name', '') }}" required>
+            <div style="display: flex; gap: 10px;">
+                <input type="email" id="cust_email" placeholder="Email Address">
+                <input type="tel" id="cust_phone" placeholder="WhatsApp No." required>
+            </div>
             
             <div style="display: flex; gap: 10px;">
-                <input type="text" id="house" placeholder="H.No" style="width: 30%;">
-                <input type="text" id="pincode" placeholder="Pincode" maxlength="6" style="width: 70%;">
+                <input type="text" id="cust_house" placeholder="Flat/House No.">
+                <input type="text" id="cust_pincode" placeholder="Pincode" maxlength="6">
             </div>
-            <textarea id="address" placeholder="Shipping Address (Area/Street)" rows="2"></textarea>
+            <textarea id="cust_address" placeholder="Full Delivery Address" rows="2" required></textarea>
             
-            <p style="font-size: 0.8rem; font-weight: bold; margin-top: 10px; color: var(--accent);">Personalization Details:</p>
-            <textarea id="details" placeholder="Names, dates, or the message you want us to write..." rows="4" style="border-color: var(--primary);"></textarea>
+            <p style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-top: 10px; text-transform: uppercase;">The Message to be Written:</p>
+            <textarea id="cust_details" placeholder="Write the content you want us to write on the paper..." rows="4" style="border: 1.5px dashed var(--romantic-red); background: #fffafb;"></textarea>
             
-            <button class="btn-submit" id="submit-btn" onclick="submitOrder()">Confirm Order (COD)</button>
+            <button class="btn-submit" id="submit-btn" onclick="submitOrder()">Place Order (Cash on Delivery)</button>
+            <p style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 15px;">
+                <i class="fas fa-info-circle"></i> We will contact you on WhatsApp for final proof.
+            </p>
         </div>
     </div>
 
     <footer>
-        <div class="logo" style="color: white; margin-bottom: 20px;">HeartScript</div>
-        <p style="opacity: 0.6; font-size: 0.8rem;">© 2025 HeartScript Artistry. All strokes reserved.</p>
+        <div class="footer-logo">HeartScript</div>
+        <p style="max-width: 500px; margin: 0 auto 30px; font-size: 0.95rem;">
+            Turning your deepest emotions into beautiful handwritten art. Based in India, shipping love worldwide.
+        </p>
+        <div style="margin-bottom: 30px; font-size: 1.2rem;">
+            <i class="fab fa-instagram" style="margin: 0 15px; color: var(--romantic-red);"></i>
+            <i class="fab fa-pinterest" style="margin: 0 15px; color: var(--romantic-red);"></i>
+        </div>
+        <p style="opacity: 0.5; font-size: 0.7rem; letter-spacing: 2px;">© 2026 HEARTSCRIPT. SPREADING LOVE MECHANICALLY-FREE.</p>
     </footer>
 
-    <script>
-        let selectedProduct = {};
+    <a href="https://wa.me/916394174932" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
-        function openCheckout(name, price) {
-            selectedProduct = { name, price };
-            document.getElementById('item-info').innerText = `${name} - ₹${price}`;
+    <script>
+        let selectedProduct = { name: "", price: "" };
+
+        function handleQuickOrder(name, price) {
+            selectedProduct = { name: name, price: price };
+            document.getElementById('item-info').innerText = `${name} — ₹${price}`;
             document.getElementById('modal-overlay').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -220,42 +335,42 @@
 
         async function submitOrder() {
             const btn = document.getElementById('submit-btn');
-            const data = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                house_no: document.getElementById('house').value,
-                pincode: document.getElementById('pincode').value,
-                address: document.getElementById('address').value,
-                custom_details: document.getElementById('details').value,
+            const orderData = {
+                name: document.getElementById('cust_name').value.trim(),
+                email: document.getElementById('cust_email').value.trim() || "guest@heartscript.com",
+                phone: document.getElementById('cust_phone').value.trim(),
+                house_no: document.getElementById('cust_house').value.trim() || "N/A",
+                pincode: document.getElementById('cust_pincode').value.trim() || "000000",
+                address: document.getElementById('cust_address').value.trim(),
+                custom_details: document.getElementById('cust_details').value.trim() || "Romantic Script",
                 items: selectedProduct.name,
-                total: selectedProduct.price
+                total: String(selectedProduct.price)
             };
 
-            if(!data.name || !data.phone || !data.custom_details) {
-                alert("Please fill name, phone and personalization details!");
+            if(!orderData.name || !orderData.phone || !orderData.address) {
+                alert("Please fill in the required fields!");
                 return;
             }
 
             btn.disabled = true;
-            btn.innerText = "Placing Order...";
+            btn.innerText = "Processing Love...";
 
             try {
                 const response = await fetch('/submit_order', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data)
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
                 });
                 const resData = await response.json();
-                if(resData.status === 'success') {
-                    window.location.href = `/thank-you/${resData.order_id}`;
+                if (resData.order_id) {
+                    window.location.href = "/thank_you/" + resData.order_id;
                 } else {
                     alert("Error: " + resData.message);
                     btn.disabled = false;
-                    btn.innerText = "Confirm Order (COD)";
+                    btn.innerText = "Place Order (Cash on Delivery)";
                 }
-            } catch(e) {
-                alert("Connection failed!");
+            } catch (err) {
+                alert("Connection lost. Please try again.");
                 btn.disabled = false;
             }
         }
