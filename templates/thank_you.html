@@ -3,181 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmed | HeartScript Artistry</title>
+    <title>Art Confirmed | HeartScript Artistry</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Great+Vibes&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    
     <style>
-        :root { --primary: #ff416c; --secondary: #2ecc71; --dark: #1a1a1a; --gold: #c5a059; }
-        body { font-family: 'Poppins', sans-serif; background: #fffcfc; margin: 0; padding: 40px 20px; color: #333; }
+        :root { 
+            --primary: #ff416c; 
+            --secondary: #ff4b2b;
+            --dark: #1a1a1a; 
+            --soft-rose: #fffafa; 
+            --green: #2ecc71;
+            --gold: #c5a059;
+            --insta: #E1306C;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            background: linear-gradient(135deg, #fff5f6 0%, #ffffff 100%);
+            color: #333; 
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        nav { 
+            padding: 15px 8%; 
+            background: rgba(255, 255, 255, 0.8); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            backdrop-filter: blur(10px);
+            position: sticky; top:0; z-index: 1000;
+        }
+        .logo { font-family: 'Great Vibes', cursive; color: var(--primary); text-decoration: none; font-size: 28px; font-weight: bold; }
         
-        .success-card { 
-            max-width: 650px; margin: auto; background: white; 
-            padding: 50px 40px; border-radius: 30px; 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
-            text-align: center; border: 1px solid #fdf2f4;
+        /* Success Card */
+        .thank-you-box { 
+            max-width: 550px; 
+            margin: 40px auto; 
+            padding: 40px; 
+            background: rgba(255, 255, 255, 0.9); 
+            border-radius: 40px; 
+            text-align: center; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.05); 
+            border: 1px solid rgba(255,255,255,0.6);
+            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .check-icon { 
-            width: 80px; height: 80px; background: #ebfaf0; color: var(--secondary);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 40px; margin: 0 auto 25px;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--dark); margin-bottom: 10px; }
-        .order-id { color: var(--gold); font-weight: 600; letter-spacing: 1px; font-size: 0.9rem; margin-bottom: 30px; display: block; }
-
-        /* Timeline Section */
-        .timeline { display: flex; justify-content: space-between; margin: 40px 0; position: relative; }
-        .timeline::before { content: ''; position: absolute; top: 15px; left: 10%; right: 10%; height: 2px; background: #eee; z-index: 1; }
-        .step { position: relative; z-index: 2; background: white; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--primary); font-size: 12px; line-height: 26px; font-weight: bold; color: var(--primary); margin: 0 auto 10px; }
-        .step-label { font-size: 0.7rem; color: #777; font-weight: 600; text-transform: uppercase; }
-
-        .summary-box { 
-            text-align: left; background: #fffcfd; padding: 30px; 
-            border-radius: 20px; margin-bottom: 35px; border: 1px dashed #ffd1dc;
+        .success-tick { 
+            width: 90px; height: 90px; 
+            background: var(--green); 
+            color: white; 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 45px; margin: 0 auto 25px; 
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .summary-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #f9f9f9; padding-bottom: 10px; }
-        .label { font-weight: 600; color: #888; font-size: 0.8rem; text-transform: uppercase; }
-        .value { color: var(--dark); font-weight: 500; }
-
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn { 
-            padding: 16px; border-radius: 50px; text-decoration: none; 
-            font-weight: 600; transition: 0.4s; display: flex; 
-            align-items: center; justify-content: center; gap: 10px; border: none; font-size: 0.9rem; cursor: pointer;
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
         }
-        .btn-wa { background: #25D366; color: white; }
-        .btn-bill { background: var(--dark); color: white; }
-        .btn-home { background: transparent; color: #999; grid-column: span 2; font-size: 0.8rem; }
-        .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
-        #invoice-template { display: none; }
+        h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--primary); margin: 0; }
+        
+        .order-status-badge {
+            background: #fff0f3;
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 15px 0;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-        @media (max-width: 500px) { .btn-group { grid-template-columns: 1fr; } .btn-home { grid-column: span 1; } }
+        .order-summary { 
+            text-align: left; 
+            background: #fff; 
+            padding: 25px; 
+            border-radius: 25px; 
+            margin: 25px 0; 
+            border: 1.5px solid #f8f8f8;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+        }
+        .summary-row { 
+            display: flex; justify-content: space-between; 
+            margin-bottom: 12px; font-size: 0.9rem; 
+            border-bottom: 1px solid #f9f9f9; padding-bottom: 10px; 
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-row span { color: #888; }
+        .summary-row b { color: var(--dark); font-weight: 600; }
+
+        /* Invoice & Promo Section (Updated) */
+        .invoice-promo-card {
+            background: #fffafa;
+            border: 2px dashed var(--gold);
+            border-radius: 25px;
+            padding: 30px 20px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .brand-story {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #555;
+            font-style: italic;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        .btn-download-invoice {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--gold);
+            color: white !important;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: 0.3s;
+            margin-bottom: 20px;
+            width: 80%;
+            box-shadow: 0 8px 15px rgba(197, 160, 89, 0.2);
+        }
+        .btn-download-invoice:hover {
+            background: var(--dark);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .social-connect {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+
+        .insta-handle {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .insta-handle i { color: var(--insta); font-size: 1.2rem; }
+
+        .btn-continue { 
+            display: block; 
+            background: linear-gradient(to right, var(--dark), #333); 
+            color: white !important; 
+            text-decoration: none; 
+            padding: 18px; 
+            border-radius: 18px; 
+            font-weight: 600; 
+            transition: 0.4s; 
+            margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .btn-continue:hover { 
+            transform: translateY(-3px); 
+            background: var(--primary);
+        }
+
+        .whatsapp-note {
+            background: #e9f9ef;
+            color: #27ae60;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        /* Wishlist Sidebar */
+        #wishlist-sidebar { position: fixed; right: -400px; top: 0; width: 350px; height: 100%; background: white; z-index: 3000; box-shadow: -15px 0 40px rgba(0,0,0,0.1); transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1); padding: 30px; }
+        #wishlist-sidebar.open { right: 0; }
+        .wish-item { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; background: #fff; padding: 10px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+        .wish-item img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
     </style>
 </head>
 <body>
 
-    <div class="success-card">
-        <div class="check-icon"><i class="fas fa-heart"></i></div>
-        <h1>Emotions Received.</h1>
-        <span class="order-id">TRANSACTION ID: #HS-{{ order.id }}</span>
-        
-        <p style="color: #666; line-height: 1.6;">Thank you for choosing <b>HeartScript</b>. Your order has been successfully placed. Our artisans are now preparing the ink and nibs for your masterpiece.</p>
-        
-        <div class="timeline">
-            <div><div class="step" style="background: var(--primary); color: white;">1</div><div class="step-label">Placed</div></div>
-            <div><div class="step">2</div><div class="step-label">Crafting</div></div>
-            <div><div class="step">3</div><div class="step-label">Preview</div></div>
-            <div><div class="step">4</div><div class="step-label">Shipped</div></div>
-        </div>
-
-        <div class="summary-box">
-            <div class="summary-item">
-                <span class="label">Ordered For:</span> <span class="value">{{ order.name }}</span>
-            </div>
-            <div class="summary-item">
-                <span class="label">Selection:</span> <span class="value">{{ order.items }}</span>
-            </div>
-            <div class="summary-item">
-                <span class="label">Amount Payable:</span> <span class="value" style="color:var(--primary); font-weight:bold; font-size: 1.2rem;">₹{{ order.total }}</span>
-            </div>
-        </div>
-
-        <div class="btn-group">
-            <a href="https://wa.me/916394174932?text=Hi HeartScript! I just placed an order (ID: #{{ order.id }}). Please confirm my calligraphy order for {{ order.items }}." 
-               target="_blank" class="btn btn-wa">
-                <i class="fab fa-whatsapp"></i> WhatsApp Confirm
+    <nav>
+        <a href="/" class="logo">HeartScript</a>
+        <div class="nav-right" style="display: flex; align-items: center; gap: 25px;">
+            <a href="/shop" style="text-decoration:none; color:var(--dark); font-size: 0.8rem; font-weight: 600; text-transform: uppercase;">Gallery</a>
+            <a href="javascript:void(0)" onclick="toggleWishlistSidebar()" style="position:relative; text-decoration:none; color:var(--dark);">
+                <i class="fas fa-shopping-bag"></i>
+                <span id="wish-count-badge" style="position:absolute; top:-10px; right:-12px; background:var(--primary); color:white; font-size:0.65rem; min-width:18px; height:18px; display:flex; align-items:center; justify-content:center; border-radius:50%; border:2px solid white;">0</span>
             </a>
-            
-            <button onclick="downloadPDF()" class="btn btn-bill">
-                <i class="fas fa-file-invoice"></i> Official Invoice
-            </button>
-            
-            <a href="/" class="btn btn-home">Back to Gallery &larr;</a>
         </div>
+    </nav>
+
+    <div id="wishlist-sidebar">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+            <h2 style="font-family: 'Playfair Display'; margin:0; font-size: 1.5rem;">Saved Gems</h2>
+            <i class="fas fa-times" onclick="toggleWishlistSidebar()" style="cursor:pointer; font-size:1.2rem; color: #ccc;"></i>
+        </div>
+        <div id="wish-list-items"></div>
     </div>
 
-    <div id="invoice-template">
-        <div style="padding: 40px; background: white; border: 10px solid #fdf2f4; position: relative;">
-            <div style="text-align: center; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 30px;">
-                <h1 style="font-family: 'Great Vibes', cursive; color: #ff416c; font-size: 50px; margin: 0;">HeartScript</h1>
-                <p style="letter-spacing: 3px; font-size: 10px; color: #777; text-transform: uppercase;">The Art of Handwritten Emotions</p>
-            </div>
+    <div class="thank-you-box">
+        <div class="success-tick"><i class="fas fa-check"></i></div>
+        <div class="order-status-badge">Order Confirmed</div>
+        <h1>Successfully Placed!</h1>
+        <p style="color: #888; font-size: 0.95rem;">Your art piece is now being prepared for the ink.</p>
 
-            <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-                <div>
-                    <h4 style="color: #ff416c; margin-bottom: 5px;">Billed To:</h4>
-                    <p style="font-size: 14px; margin: 0;"><strong>{{ order.name }}</strong></p>
-                    <p style="font-size: 12px; color: #555; margin: 0;">{{ order.house_no }}, {{ order.address }}<br>PIN: {{ order.pincode }}</p>
-                </div>
-                <div style="text-align: right;">
-                    <h4 style="color: #ff416c; margin-bottom: 5px;">Invoice Details:</h4>
-                    <p style="font-size: 12px; margin: 0;">Order No: #HS-{{ order.id }}</p>
-                    <p style="font-size: 12px; margin: 0;">Date: {{ order.date }}</p>
-                    <p style="font-size: 12px; margin: 0;">Payment: Cash on Delivery</p>
-                </div>
-            </div>
+        {% if order %}
+        <div style="font-weight: 700; color: var(--dark); margin-top: 15px; letter-spacing: 1px;">ID: #HS-{{ order.id }}</div>
 
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #ff416c; color: white;">
-                        <th style="padding: 12px; text-align: left; font-size: 13px;">DESCRIPTION</th>
-                        <th style="padding: 12px; text-align: right; font-size: 13px;">AMOUNT</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="padding: 20px 12px; border-bottom: 1px solid #eee;">
-                            <strong>{{ order.items }}</strong><br>
-                            <span style="font-size: 11px; color: #888;">Custom Calligraphy Art with Premium Ink & Paper.</span>
-                        </td>
-                        <td style="padding: 20px 12px; border-bottom: 1px solid #eee; text-align: right;">₹{{ order.total }}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 15px 12px; text-align: right;"><strong>Grand Total:</strong></td>
-                        <td style="padding: 15px 12px; text-align: right; color: #ff416c; font-size: 18px;"><strong>₹{{ order.total }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="order-summary">
+            <div class="summary-row"><span>Masterpiece:</span> <b>{{ order.items }}</b></div>
+            <div class="summary-row"><span>Investment:</span> <b>₹{{ order.total }} (COD)</b></div>
+            <div class="summary-row"><span>Ship To:</span> <b>{{ order.name }}</b></div>
+            <div class="summary-row"><span>Contact:</span> <b>{{ order.phone }}</b></div>
+        </div>
 
-            <div style="margin-top: 40px; padding: 20px; background: #fffcfc; border: 1px solid #eee; border-radius: 5px;">
-                <p style="font-size: 10px; color: #777; line-height: 1.5; margin: 0;">
-                    <b>Personalization Note:</b> "{{ order.custom_details }}"
-                </p>
-            </div>
+        <div class="invoice-promo-card">
+            <p class="brand-story">"At HeartScript, we don't just write; we weave soul into every stroke of the pen. Your chosen piece is being crafted on archival-grade paper to last a lifetime."</p>
+            
+            <a href="/download_invoice/{{ order.id }}" class="btn-download-invoice">
+                <i class="fas fa-file-pdf"></i> Download Official Invoice
+            </a>
 
-            <div style="margin-top: 50px; text-align: center; font-size: 10px; color: #aaa;">
-                <p>This is a digitally generated invoice. No signature required.</p>
-                <p>HeartScript Artistry | India | official@heartscript.com</p>
+            <div class="social-connect">
+                <p class="insta-handle"><i class="fab fa-instagram"></i> @heartscript025</p>
+                <p style="font-size: 0.75rem; color: #888; margin: 0;">Follow us for behind-the-scenes & art tips!</p>
             </div>
+        </div>
+        {% endif %}
+
+        <div class="whatsapp-note">
+            <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i>
+            <span>We'll reach out on <b>6394174932</b> for any custom details.</span>
+        </div>
+        
+        <a href="/shop" class="btn-continue">Explore More Art</a>
+        
+        <div style="margin-top: 30px;">
+            <a href="/" style="color: #bbb; font-size: 0.85rem; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='#bbb'">
+                <i class="fas fa-arrow-left me-1"></i> Back to Studio Home
+            </a>
         </div>
     </div>
 
     <script>
-        function downloadPDF() {
-            const element = document.getElementById('invoice-template');
-            element.style.display = 'block';
-            
-            const options = {
-                margin: 0.2,
-                filename: 'HeartScript_Invoice_HS-{{ order.id }}.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 3, useCORS: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-            
-            const btn = document.querySelector('.btn-bill');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-feather fa-spin"></i> Sealing...';
-            
-            html2pdf().set(options).from(element).save().then(() => {
-                btn.innerHTML = originalHTML;
-                element.style.display = 'none';
-            });
+        function fireConfetti() {
+            const count = 200;
+            const defaults = { origin: { y: 0.7 }, zIndex: 9999 };
+            function fire(particleRatio, opts) {
+                confetti({ ...defaults, ...opts, particleCount: Math.floor(count * particleRatio) });
+            }
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
         }
+
+        let wishlist = JSON.parse(localStorage.getItem('heartscript_wish')) || [];
+
+        function updateWishlistDisplay() {
+            const badge = document.getElementById('wish-count-badge');
+            const listContainer = document.getElementById('wish-list-items');
+            if(badge) badge.innerText = wishlist.length;
+            if(listContainer) {
+                if(wishlist.length === 0) {
+                    listContainer.innerHTML = '<div style="text-align:center; margin-top:50px; color:#ccc;"><i class="fas fa-heart-broken fa-3x"></i><p class="mt-3">Your wishlist is empty.</p></div>';
+                    return;
+                }
+                listContainer.innerHTML = wishlist.map((item, index) => `
+                    <div class="wish-item">
+                        <img src="${item.img}" alt="">
+                        <div style="flex:1">
+                            <h4 style="margin:0; font-size:0.8rem; font-weight:600;">${item.name}</h4>
+                            <p style="margin:0; color:var(--primary); font-weight:bold; font-size:0.75rem;">${item.price}</p>
+                        </div>
+                        <i class="fas fa-trash-alt" onclick="removeFromWishlist(${index})" style="cursor:pointer; color:#eee; transition:0.3s;" onmouseover="this.style.color='#ff416c'" onmouseout="this.style.color='#eee'"></i>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function removeFromWishlist(index) {
+            wishlist.splice(index, 1);
+            localStorage.setItem('heartscript_wish', JSON.stringify(wishlist));
+            updateWishlistDisplay();
+        }
+
+        function toggleWishlistSidebar() {
+            document.getElementById('wishlist-sidebar').classList.toggle('open');
+        }
+
+        window.onload = () => {
+            updateWishlistDisplay();
+            fireConfetti(); 
+        };
     </script>
 </body>
 </html>
