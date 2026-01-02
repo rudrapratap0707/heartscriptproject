@@ -44,6 +44,10 @@
 
         .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center; }
         .alert-success { background: #d4edda; color: #155724; }
+        .alert-danger { background: #f8d7da; color: #721c24; }
+
+        /* File input specific styling */
+        .file-label { font-size: 12px; font-weight: bold; color: var(--dark); display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -88,22 +92,23 @@
 
         <div id="products" class="card">
             <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
-            <form action="/add_product" method="POST">
+            <form action="/add_product" method="POST" enctype="multipart/form-data">
                 <div class="form-row">
                     <div>
-                        <label>Product Name</label>
+                        <label class="file-label">Product Name</label>
                         <input type="text" name="name" placeholder="Luxury Love Letter" required>
                     </div>
                     <div>
-                        <label>Price (₹)</label>
+                        <label class="file-label">Price (₹)</label>
                         <input type="number" name="price" placeholder="149" required>
                     </div>
                     <div>
-                        <label>Image URL</label>
-                        <input type="text" name="image_url" placeholder="https://link-to-art.com">
+                        <label class="file-label">Upload Image (Cloudinary)</label>
+                        <input type="file" name="product_image" accept="image/*">
+                        <small style="font-size: 10px; color: #666;">Will be stored on cloud</small>
                     </div>
                     <div>
-                        <label>Category</label>
+                        <label class="file-label">Category</label>
                         <select name="category_id" required>
                             <option value="">Select Category</option>
                             {% for cat in categories %}
@@ -112,8 +117,12 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-row" style="grid-template-columns: 3fr 1fr;">
-                    <textarea name="description" placeholder="Write the 'Story' of this piece. Describe the calligraphy style, emotions, and materials used for the product page..." rows="4" required></textarea>
+                <div class="form-row" style="grid-template-columns: 2fr 1fr 1fr;">
+                    <textarea name="description" placeholder="Write the 'Story' of this piece..." rows="4" required></textarea>
+                    <div>
+                        <label class="file-label">OR Manual Image URL</label>
+                        <input type="text" name="image_url" placeholder="https://link-to-art.com">
+                    </div>
                     <button type="submit" style="height: fit-content; align-self: end;">Publish Masterpiece</button>
                 </div>
             </form>
@@ -147,6 +156,7 @@
                         <td>
                             <div class="address-box">
                                 {{ order.house_no }}, {{ order.address }}<br>
+                                {% if order.landmark %}<b>Landmark:</b> {{ order.landmark }}<br>{% endif %}
                                 <b>PIN:</b> {{ order.pincode }}
                             </div>
                         </td>
@@ -176,6 +186,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Preview</th>
                         <th>Product</th>
                         <th>Category</th>
                         <th>Price</th>
@@ -185,11 +196,12 @@
                 <tbody>
                     {% for product in products %}
                     <tr>
+                        <td><img src="{{ product.image_url }}" alt="" style="width: 50px; height: 50px; border-radius: 5px; object-fit: cover;"></td>
                         <td><b>{{ product.name }}</b></td>
                         <td><span class="badge">{{ product.category_ref.name }}</span></td>
                         <td>₹{{ product.price }}</td>
                         <td>
-                            <a href="/delete_product/{{ product.id }}" style="color: red; text-decoration: none; font-size: 13px;">
+                            <a href="/delete_product/{{ product.id }}" style="color: red; text-decoration: none; font-size: 13px;" onclick="return confirm('Delete this product?')">
                                 <i class="fas fa-times"></i> Remove
                             </a>
                         </td>
